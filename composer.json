@@ -1,0 +1,27 @@
+{
+  "name": "relinks/omnipay-buckaroo",
+  "type": "library",
+  "description": "Buckaroo driver for the Omnipay payment processing library",
+  "keywords": [
+    "buckaroo",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment"
+  ],
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Buckaroo\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^7.2",
+    "omnipay/common": "^3.0",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "omnipay/tests": "^3.0"
+  }
+}
