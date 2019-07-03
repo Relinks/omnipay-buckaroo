@@ -20,9 +20,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
             return false;
         }
 
-        $statusCode = $this->data['Status']['Code']['Code'] ?? null;
-
-        return $statusCode === 190;
+        return $this->getCode() === 190;
     }
 
     /**
@@ -33,6 +31,14 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         $subCode = $this->data['Status']['SubCode']['Code'] ?? null;
 
         return $subCode === 'S002';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCancelled(): bool
+    {
+        return $this->getCode() === 890;
     }
 
     /**
@@ -51,5 +57,21 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getRedirectMethod(): string
     {
         return 'GET';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCode(): ?string
+    {
+        return $this->data['Status']['Code']['Code'] ?? null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessage(): ?string
+    {
+        return $this->data['Status']['Code']['Description'] ?? null;
     }
 }

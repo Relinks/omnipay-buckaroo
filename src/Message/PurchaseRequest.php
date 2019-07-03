@@ -18,7 +18,7 @@ class PurchaseRequest extends AbstractRequest
     {
         $data = parent::getData();
 
-        $this->validate('paymentMethod', 'amount', 'returnUrl');
+        $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
         switch ($this->getPaymentMethod()) {
             case 'ideal':
@@ -42,6 +42,12 @@ class PurchaseRequest extends AbstractRequest
                 // TODO: Add other payment methods
         }
 
+        $data['ClientIP'] = [
+            // 0 = IPV4
+            // 1 = IPV6
+            'Type' => (int)filter_var($this->getClientIp(), FILTER_FLAG_IPV6),
+            'Address' => $this->getClientIp(),
+        ];
         $data['Currency'] = $this->getCurrency();
         $data['AmountDebit'] = $this->getAmount();
         $data['Invoice'] = $this->getTransactionId();
@@ -57,12 +63,14 @@ class PurchaseRequest extends AbstractRequest
         ksort($data);
         $jsonData = json_encode($data);
 
+        $endpoint = $this->getEndpoint('/Transaction');
+
         try {
             $response = $this->httpClient->request(
                 'POST',
-                $this->getEndpoint('/Transaction'),
+                $endpoint,
                 [
-                    'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData),
+                    'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData, $endpoint),
                     'Content-Type' => 'application/json',
                 ],
                 $jsonData
