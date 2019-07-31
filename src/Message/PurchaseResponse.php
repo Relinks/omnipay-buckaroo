@@ -28,9 +28,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isRedirect(): bool
     {
-        $subCode = $this->data['Status']['SubCode']['Code'] ?? null;
-
-        return $subCode === 'S002';
+        return $this->data['RequiredAction']['RedirectURL'] ? true : false;
     }
 
     /**

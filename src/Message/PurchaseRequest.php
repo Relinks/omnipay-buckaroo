@@ -10,6 +10,26 @@ use Throwable;
 class PurchaseRequest extends AbstractRequest
 {
     /**
+     * @return string|null
+     */
+    public function getEncryptedKey(): ?string
+    {
+        return $this->getParameter('encryptedKey');
+    }
+
+    /**
+     * @param string|null $encryptedKey
+     *
+     * @return PurchaseRequest
+     */
+    public function setEncryptedKey(?string $encryptedKey): PurchaseRequest
+    {
+        $this->setParameter('encryptedKey', $encryptedKey);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -20,27 +40,8 @@ class PurchaseRequest extends AbstractRequest
 
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
-        switch ($this->getPaymentMethod()) {
-            case 'ideal':
-                $this->validate('issuer');
-
-                $data['Services'] = [
-                    'ServiceList' => [
-                        [
-                            'Name' => $this->getPaymentMethod(),
-                            'Action' => 'Pay',
-                            'Parameters' => [
-                                [
-                                    'Name' => 'issuer',
-                                    'Value' => $this->getParameter('issuer'),
-                                ],
-                            ],
-                        ],
-                    ],
-                ];
-                break;
-                // TODO: Add other payment methods
-        }
+        $services = $this->getServices($this->getPaymentMethod());
+        $data = array_merge($data, $services);
 
         $data['ClientIP'] = [
             // 0 = IPV4
@@ -51,6 +52,8 @@ class PurchaseRequest extends AbstractRequest
         $data['Currency'] = $this->getCurrency();
         $data['AmountDebit'] = $this->getAmount();
         $data['Invoice'] = $this->getTransactionId();
+        $data['ReturnUrl'] = $this->getReturnUrl();
+        $data['PushUrl'] = $this->getNotifyUrl();
 
         return $data;
     }
@@ -82,5 +85,88 @@ class PurchaseRequest extends AbstractRequest
         }
 
         return new PurchaseResponse($this, $respData);
+    }
+
+    private function getServices(string $paymentMethod): array
+    {
+        $data = [];
+
+        switch ($paymentMethod) {
+            case 'ideal':
+                if ($this->getIssuer()) {
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [
+                                'Name' => $this->getPaymentMethod(),
+                                'Action' => 'Pay',
+                                'Parameters' => [
+                                    [
+                                        'Name' => 'issuer',
+                                        'Value' => $this->getParameter('issuer'),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+                } else {
+                    $data['ServicesSelectableByClient'] = 'ideal';
+                    $data['ContinueOnIncomplete'] = 1;
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [],
+                        ],
+                    ];
+                }
+                break;
+            case 'creditcard':
+                if ($this->getIssuer() && $this->getEncryptedKey()) {
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [
+                                'Name' => $this->getParameter('issuer'),
+                                'Action' => 'PayEncrypted',
+                                "Version" => 0,
+                                'Parameters' => [
+                                    [
+                                        'Name' => 'EncryptedCardData',
+                                        "GroupType" => '',
+                                        "GroupID" => '',
+                                        'Value' => $this->getParameter('encryptedKey'),
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+                } else {
+                    $data['ServicesSelectableByClient'] = 'visa, mastercard';
+                    $data['ContinueOnIncomplete'] = 1;
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [],
+                        ],
+                    ];
+                }
+                break;
+            case 'paypal':
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                        ],
+                    ],
+                ];
+                break;
+            case 'mistercash':
+                $data['ServicesSelectableByClient'] = 'bancontactmrcash';
+                $data['ContinueOnIncomplete'] = 1;
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [],
+                    ],
+                ];
+        }
+
+        return $data;
     }
 }
