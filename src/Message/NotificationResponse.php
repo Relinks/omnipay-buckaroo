@@ -33,7 +33,7 @@ class NotificationResponse implements NotificationInterface
      */
     public function getTransactionReference()
     {
-        return $this->data['brq_payment'];
+        return $this->data['brq_transactions'];
     }
 
     /**
