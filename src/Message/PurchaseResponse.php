@@ -59,10 +59,12 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     /**
      * {@inheritdoc}
+     *  result is being casted to string because buckaroo returns an integer value.
+     *  The abstract classes enforces a string value.
      */
     public function getCode(): ?string
     {
-        return $this->data['Status']['Code']['Code'] ?? null;
+        return (string) $this->data['Status']['Code']['Code'] ?? null;
     }
 
     /**

@@ -55,7 +55,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ReturnUrl'] = $this->getReturnUrl();
         $data['ReturnURLCancel'] = $this->getCancelUrl();
         $data['ReturnURLError'] = $this->getCancelUrl();
-        $data['ReturnURLReject'] = $this->getCancelUrl();
+        $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
 
         return $data;
@@ -161,6 +161,25 @@ class PurchaseRequest extends AbstractRequest
                 ];
                 break;
             case 'mistercash':
+                if ($this->getIssuer() && $this->getEncryptedKey()) {
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => $this->getParameter('issuer'),
+                            'Action' => 'PayEncrypted',
+                            "Version" => 0,
+                            'Parameters' => [
+                                [
+                                    'Name' => 'EncryptedCardData',
+                                    "GroupType" => '',
+                                    "GroupID" => '',
+                                    'Value' => $this->getParameter('encryptedKey'),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+            } else {
                 $data['ServicesSelectableByClient'] = 'bancontactmrcash';
                 $data['ContinueOnIncomplete'] = 1;
                 $data['Services'] = [
@@ -168,6 +187,7 @@ class PurchaseRequest extends AbstractRequest
                         [],
                     ],
                 ];
+            }
         }
 
         return $data;
