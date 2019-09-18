@@ -19,10 +19,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         if ($this->isRedirect()) {
             return false;
         }
-
-        $statusCode = $this->data['Status']['Code']['Code'] ?? null;
-
-        return $statusCode === 190;
+        // 190 = Success
+        // 792 = Wating for consumer
+        return in_array($this->getCode(),['190', '792']);
     }
 
     /**
@@ -30,9 +29,23 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isRedirect(): bool
     {
-        $subCode = $this->data['Status']['SubCode']['Code'] ?? null;
+        return $this->data['RequiredAction']['RedirectURL'] ? true : false;
+    }
 
-        return $subCode === 'S002';
+    /**
+     * {@inheritdoc}
+     */
+    public function isCancelled(): bool
+    {
+        return $this->getCode() === '890';
+    }
+
+    public function isPending()
+    {
+        // 790 = Pending Input
+        // 791 = Pending Processing
+
+        return in_array($this->getCode(),['790', '791']);
     }
 
     /**
@@ -51,5 +64,31 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getRedirectMethod(): string
     {
         return 'GET';
+    }
+
+    /**
+     * {@inheritdoc}
+     *  result is being casted to string because buckaroo returns an integer value.
+     *  The abstract classes enforces a string value.
+     */
+    public function getCode(): ?string
+    {
+        return (string) $this->data['Status']['Code']['Code'] ?? null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessage(): ?string
+    {
+        return $this->data['Status']['Code']['Description'] ?? null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransactionReference()
+    {
+        return $this->data['Key'];
     }
 }

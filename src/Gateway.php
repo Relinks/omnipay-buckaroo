@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Omnipay\Buckaroo;
 
+use Omnipay\Buckaroo\Message\DataRequest;
+use Omnipay\Buckaroo\Message\PurchaseRequest;
+use Omnipay\Buckaroo\Message\StatusRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
@@ -62,6 +65,16 @@ class Gateway extends AbstractGateway
 
     public function purchase(array $parameters = [])
     {
-        return $this->createRequest('\Omnipay\Buckaroo\Message\PurchaseRequest', $parameters);
+        return $this->createRequest(PurchaseRequest::class, $parameters);
+    }
+
+    public function status(array $parameters = [])
+    {
+        return $this->createRequest(StatusRequest::class, $parameters);
+    }
+
+    public function data(array $parameters = [])
+    {
+        return $this->createRequest(DataRequest::class, $parameters);
     }
 }

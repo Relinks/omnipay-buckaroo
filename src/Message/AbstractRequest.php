@@ -107,23 +107,29 @@ abstract class AbstractRequest extends CommonAbstractRequest
 
     /**
      * @param string $jsonData
+     * @param string $endpoint
      *
      * @return string
      */
-    protected function generateAuthorizationToken(string $jsonData): string
+    protected function generateAuthorizationToken(string $jsonData, string $endpoint): string
     {
-        $md5 = md5($jsonData, true);
-        $post = base64_encode($md5);
+        $method = 'GET';
+
+        if ($jsonData) {
+            $md5 = md5($jsonData, true);
+            $post = base64_encode($md5);
+            $method = 'POST';
+        }
 
         $websiteKey = $this->getWebsiteKey();
-        // TODO: Don't hardcode
-        $uri = strtolower(urlencode('testcheckout.buckaroo.nl/json/Transaction'));
+        $uri = substr($endpoint, strlen('https://'));
+        $uri = strtolower(urlencode($uri));
         $nonce = 'nonce_' . rand(0000000, 9999999);
         $time = time();
 
-        $hmac = $websiteKey . 'POST' . $uri . $time . $nonce . $post;
-        $s = hash_hmac('sha256', $hmac, $this->getSecretKey(), true);
-        $hmac = base64_encode($s);
+        $hmac = $websiteKey . $method . $uri . $time . $nonce . $post;
+        $hmac = hash_hmac('sha256', $hmac, $this->getSecretKey(), true);
+        $hmac = base64_encode($hmac);
 
         return $websiteKey . ':' . $hmac . ':' . $nonce . ':' . $time;
     }
