@@ -70,6 +70,18 @@ class PurchaseRequest extends AbstractRequest
         return $this;
     }
 
+    public function setRedirectCallable(callable $redirectCallable)
+    {
+        $this->setParameter('redirectCallable', $redirectCallable);
+
+        return $this;
+    }
+
+    public function getRedirectCallable(): ?callable
+    {
+        return $this->getParameter('redirectCallable');
+    }
+
 
     /**
      * {@inheritdoc}
@@ -100,6 +112,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ReturnURLError'] = $this->getCancelUrl();
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
+        $data['redirectCallable'] = $this->getRedirectCallable();
 
         return $data;
     }
@@ -130,16 +143,27 @@ class PurchaseRequest extends AbstractRequest
             throw new RuntimeException('Could not send the request', 0, $t);
         }
 
-        return new PurchaseResponse($this, $respData);
+        $purchaseResponse =  new PurchaseResponse($this, $respData);
+        $purchaseResponse->setCallableFunctionRedirect($this->getRedirectCallable());
+
+        return $purchaseResponse;
     }
 
+    /**
+     * @SuppressWarnings(CyclomaticComplexity)
+     * @SuppressWarnings(ExcessiveMethodLength)
+     *
+     * @param string $paymentMethod
+     *
+     * @return array
+     */
     private function getServices(string $paymentMethod): array
     {
         $data = [];
 
         switch ($paymentMethod) {
             case 'ideal':
-               if ($this->getIssuer()) {
+                if ($this->getIssuer()) {
                     $data['Services'] = [
                         'ServiceList' => [
                             [
@@ -155,11 +179,13 @@ class PurchaseRequest extends AbstractRequest
                         ],
                     ];
                 } else {
-                    $data['ServicesSelectableByClient'] = 'ideal';
                     $data['ContinueOnIncomplete'] = 1;
                     $data['Services'] = [
                         'ServiceList' => [
-                            [],
+                            [
+                                'Name' => $this->getPaymentMethod(),
+                                'Action' => 'Pay',
+                            ],
                         ],
                     ];
                 }
@@ -207,34 +233,35 @@ class PurchaseRequest extends AbstractRequest
                     ],
                 ];
                 break;
-            case 'mistercash':
-                if ($this->getIssuer() && $this->getEncryptedKey()) {
-                $data['Services'] = [
-                    'ServiceList' => [
-                        [
-                            'Name' => $this->getParameter('issuer'),
-                            'Action' => 'PayEncrypted',
-                            "Version" => 0,
-                            'Parameters' => [
-                                [
-                                    'Name' => 'EncryptedCardData',
-                                    "GroupType" => '',
-                                    "GroupID" => '',
-                                    'Value' => $this->getParameter('encryptedKey'),
+            case 'bancontactmrcash':
+                if ($this->getEncryptedKey()) {
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [
+                                'Name' => $this->getPaymentMethod(),
+                                'Action' => 'PayEncrypted',
+                                "Version" => 0,
+                                'Parameters' => [
+                                    [
+                                        'Name' => 'EncryptedCardData',
+                                        "GroupType" => '',
+                                        "GroupID" => '',
+                                        'Value' => $this->getParameter('encryptedKey'),
+                                    ],
                                 ],
                             ],
                         ],
-                    ],
-                ];
-            } else {
-                $data['ServicesSelectableByClient'] = 'bancontactmrcash';
-                $data['ContinueOnIncomplete'] = 1;
-                $data['Services'] = [
-                    'ServiceList' => [
-                        [],
-                    ],
-                ];
-            }
+                    ];
+                } else {
+                    $data['Services'] = [
+                        'ServiceList' => [
+                            [
+                                'Name' => $this->getPaymentMethod(),
+                                'Action' => 'Pay',
+                            ],
+                        ],
+                    ];
+                }
                 break;
             case 'transfer':
                 try {

@@ -114,6 +114,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
     protected function generateAuthorizationToken(string $jsonData, string $endpoint): string
     {
         $method = 'GET';
+        $post =  '';
 
         if ($jsonData) {
             $md5 = md5($jsonData, true);

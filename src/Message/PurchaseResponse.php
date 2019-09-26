@@ -11,6 +11,8 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
+    private $callableFunctionRedirect;
+
     /**
      * {@inheritdoc}
      */
@@ -21,7 +23,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         }
         // 190 = Success
         // 792 = Wating for consumer
-        return in_array($this->getCode(),['190', '792']);
+        return in_array($this->getCode(), ['190', '792']);
     }
 
     /**
@@ -45,7 +47,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         // 790 = Pending Input
         // 791 = Pending Processing
 
-        return in_array($this->getCode(),['790', '791']);
+        return in_array($this->getCode(), ['790', '791']);
     }
 
     /**
@@ -53,7 +55,11 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function getRedirectUrl(): ?string
     {
-        $redirectUrl = $this->data['RequiredAction']['RedirectURL'] ?? null;
+        if ($this->getCallableFunctionRedirect() && is_callable($this->getCallableFunctionRedirect())) {
+            $redirectUrl = call_user_func($this->getCallableFunctionRedirect(), $this);
+        } else {
+            $redirectUrl = $this->data['RequiredAction']['RedirectURL'] ?? null;
+        }
 
         return $redirectUrl;
     }
@@ -90,5 +96,15 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getTransactionReference()
     {
         return $this->data['Key'];
+    }
+
+    public function setCallableFunctionRedirect($callableFunctionRedirect)
+    {
+        $this->callableFunctionRedirect = $callableFunctionRedirect;
+    }
+
+    public function getCallableFunctionRedirect()
+    {
+        return $this->callableFunctionRedirect;
     }
 }
