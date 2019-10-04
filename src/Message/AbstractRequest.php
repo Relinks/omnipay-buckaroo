@@ -52,6 +52,24 @@ abstract class AbstractRequest extends CommonAbstractRequest
     }
 
     /**
+     * @param string $value
+     *
+     * @return AbstractRequest
+     */
+    public function setCulture(string $value): AbstractRequest
+    {
+        return $this->setParameter('culture', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCulture(): string
+    {
+        return $this->getParameter('culture');
+    }
+
+    /**
      * @return string
      */
     public function getRejectUrl(): string

@@ -113,6 +113,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
         $data['redirectCallable'] = $this->getRedirectCallable();
+        $data['AdditionalParameters'] = ['AdditionalParameter'=> [['Name'=>'Culture', 'Value'=> $this->getCulture()]]];
 
         return $data;
     }
