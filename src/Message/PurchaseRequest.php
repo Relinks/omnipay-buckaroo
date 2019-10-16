@@ -113,7 +113,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
         $data['redirectCallable'] = $this->getRedirectCallable();
-        $data['AdditionalParameters'] = ['AdditionalParameter'=> [['Name'=>'Culture', 'Value'=> $this->getCulture()]]];
+
 
         return $data;
     }
@@ -135,6 +135,7 @@ class PurchaseRequest extends AbstractRequest
                 [
                     'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData, $endpoint),
                     'Content-Type' => 'application/json',
+                    'Culture' => $this->getCulture(),
                 ],
                 $jsonData
             );
