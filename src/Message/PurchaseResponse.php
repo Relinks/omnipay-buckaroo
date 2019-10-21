@@ -22,8 +22,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
             return false;
         }
         // 190 = Success
-        // 792 = Wating for consumer
-        return in_array($this->getCode(), ['190', '792']);
+        return in_array($this->getCode(), ['190']);
     }
 
     /**
@@ -46,8 +45,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     {
         // 790 = Pending Input
         // 791 = Pending Processing
+        // 792 = Waiting for consumer
 
-        return in_array($this->getCode(), ['790', '791']);
+        return in_array($this->getCode(), ['790', '791', '792']);
     }
 
     /**
