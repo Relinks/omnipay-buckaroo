@@ -107,6 +107,7 @@ class PurchaseRequest extends AbstractRequest
         $data['Currency'] = $this->getCurrency();
         $data['AmountDebit'] = $this->getAmount();
         $data['Invoice'] = $this->getTransactionId();
+        $data['Description'] = $this->getDescription();
         $data['ReturnUrl'] = $this->getReturnUrl();
         $data['ReturnURLCancel'] = $this->getCancelUrl();
         $data['ReturnURLError'] = $this->getCancelUrl();
