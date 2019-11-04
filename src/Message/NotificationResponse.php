@@ -23,7 +23,7 @@ class NotificationResponse implements NotificationInterface
      */
     public function getData()
     {
-       return $this->data;
+        return $this->data;
     }
 
     /**
@@ -44,7 +44,7 @@ class NotificationResponse implements NotificationInterface
      */
     public function getTransactionStatus()
     {
-        if($this->data['brq_statuscode'] == 190) {
+        if ($this->data['brq_statuscode'] == 190) {
             return NotificationInterface::STATUS_COMPLETED;
         }
         return NotificationInterface::STATUS_FAILED;
@@ -57,7 +57,7 @@ class NotificationResponse implements NotificationInterface
      */
     public function getMessage()
     {
-
+        return $this->data['brq_statusmessage'];
     }
 
     /**
@@ -66,5 +66,13 @@ class NotificationResponse implements NotificationInterface
     public function getAmount()
     {
         return $this->data['brq_amount'];
+    }
+
+    /**
+     * @return
+     */
+    public function getInvoiceNumber()
+    {
+        return $this->data['brq_invoicenumber'];
     }
 }
