@@ -69,4 +69,11 @@ class StatusResponse extends AbstractResponse
         return (string) $this->data['Status']['Code']['Code'] ?? null;
     }
 
+    /*
+     * return string|null
+     */
+    public function getAmountDebit(): ?string
+    {
+        return (string) $this->data['AmountDebit'] ?? null;
+    }
 }
