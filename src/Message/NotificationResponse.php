@@ -61,7 +61,7 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getAmount()
     {
@@ -69,10 +69,18 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
-     * @return
+     * @return string
      */
     public function getInvoiceNumber()
     {
         return $this->data['brq_invoicenumber'];
+    }
+
+    /**
+     * return string
+     */
+    public function getTransactionMethod()
+    {
+        return $this->data['brq_transaction_method'];
     }
 }
