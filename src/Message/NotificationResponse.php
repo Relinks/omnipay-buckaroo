@@ -83,4 +83,12 @@ class NotificationResponse implements NotificationInterface
     {
         return $this->data['brq_transaction_method'];
     }
+
+    /**
+     * return string
+     */
+    public function getTransactionType()
+    {
+        return $this->data['brq_transaction_type'];
+    }
 }
