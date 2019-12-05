@@ -69,6 +69,25 @@ abstract class AbstractRequest extends CommonAbstractRequest
         return $this->getParameter('culture');
     }
 
+
+    /**
+     * @param bool $value
+     *
+     * @return AbstractRequest
+     */
+    public function setPayPermail(bool $value): AbstractRequest
+    {
+        return $this->setParameter('payPerMail', $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPayPerMail(): bool
+    {
+        return $this->getParameter('payPerMail');
+    }
+
     /**
      * @return string
      */
