@@ -94,7 +94,13 @@ class PurchaseRequest extends AbstractRequest
 
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
-        $services = $this->getServices($this->getPaymentMethod());
+        if($this->isPayPerMail())
+        {
+            $services = $this->getPayperMailServices();
+        }
+        else {
+            $services = $this->getServices($this->getPaymentMethod());
+        }
 
         $data = array_merge($data, $services);
 
@@ -142,6 +148,7 @@ class PurchaseRequest extends AbstractRequest
             );
 
             $respData = json_decode((string) $response->getBody(), true);
+
         } catch (Throwable $t) {
             throw new RuntimeException('Could not send the request', 0, $t);
         }
@@ -150,6 +157,68 @@ class PurchaseRequest extends AbstractRequest
         $purchaseResponse->setCallableFunctionRedirect($this->getRedirectCallable());
 
         return $purchaseResponse;
+    }
+
+    public function getPayperMailServices()
+    {
+        switch($this->getSiteId()){
+            case Site::SWNL:
+                $allowedPaymentMethods = 'ideal,mastercard,visa,meastro,paypal,transfer';
+                break;
+            case Site::SWBE:
+                $allowedPaymentMethods = 'bancontact,mastercard,visa,meastro,paypal,transfer';
+                break;
+            case Site::MSFR:
+                $allowedPaymentMethods = 'mastercard,visa,meastro,paypal,transfer';
+                break;
+        }
+
+        $data = [];
+        $transferCustomerData = $this->getParameter('transferCustomerData');
+        $data['Services'] = [
+            'ServiceList' => [
+                [
+                    'Name' => 'payperemail',
+                    'Action' => 'PaymentInvitation',
+                    'Parameters' => [
+                        [
+                            'Name' => 'customergender',
+                            'Value' => '1',
+                        ],
+                        [
+                            'Name' => 'MerchantSendsEmail',
+                            'Value' => 'false',
+                        ],
+                        [
+                            'Name' => 'ExpirationDate',
+                            'Value' => $transferCustomerData['dueDate']->format('Y-m-d'),
+                        ],
+                        [
+                            'Name' => 'PaymentMethodsAllowed',
+                            'Value' => 'transfer,ideal,mastercard,paypal',
+                        ],
+                        [
+                            'Name' => 'Attachment',
+                            'Value' => $allowedPaymentMethods,
+                        ],
+                        [
+                            'Name' => 'CustomerEmail',
+                            'Value' => $transferCustomerData['email'],
+                        ],
+                        [
+                            'Name' => 'CustomerFirstName',
+                            'Value' => $transferCustomerData['firstName'],
+                        ],
+                        [
+                            'Name' => 'CustomerLastName',
+                            'Value' => $transferCustomerData['lastName'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
     }
 
     /**
