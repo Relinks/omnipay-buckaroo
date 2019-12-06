@@ -171,6 +171,9 @@ class PurchaseRequest extends AbstractRequest
             case Site::MSFR:
                 $allowedPaymentMethods = 'mastercard,visa,meastro,paypal,transfer';
                 break;
+            default:
+                $allowedPaymentMethods = 'mastercard,visa,meastro,paypal,transfer';
+                break;
         }
 
         $data = [];
@@ -195,11 +198,11 @@ class PurchaseRequest extends AbstractRequest
                         ],
                         [
                             'Name' => 'PaymentMethodsAllowed',
-                            'Value' => 'transfer,ideal,mastercard,paypal',
+                            'Value' => $allowedPaymentMethods,
                         ],
                         [
                             'Name' => 'Attachment',
-                            'Value' => $allowedPaymentMethods,
+                            'Value' => '',
                         ],
                         [
                             'Name' => 'CustomerEmail',
