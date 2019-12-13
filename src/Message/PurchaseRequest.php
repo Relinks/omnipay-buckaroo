@@ -33,9 +33,9 @@ class PurchaseRequest extends AbstractRequest
     /**
      * @return array|null
      */
-    public function getTranfserCustomerData(): ?array
+    public function getCustomerData(): ?array
     {
-        return $this->getParameter('transferCustomerData');
+        return $this->getParameter('customerData');
     }
 
     /**
@@ -43,9 +43,9 @@ class PurchaseRequest extends AbstractRequest
      *
      * @return PurchaseRequest
      */
-    public function setTransferCustomerdata(?array $transferCustomerData): PurchaseRequest
+    public function setCustomerdata(?array $customerData): PurchaseRequest
     {
-        $this->setParameter('transferCustomerData', $transferCustomerData);
+        $this->setParameter('customerData', $customerData);
 
         return $this;
     }
@@ -81,6 +81,27 @@ class PurchaseRequest extends AbstractRequest
     {
         return $this->getParameter('redirectCallable');
     }
+
+    /**
+     * @return string|null
+     */
+    public function getAvailablePaymentMethods(): ?string
+    {
+        return $this->getParameter('availablePaymentMethods');
+    }
+
+    /**
+     * @param string|null $availablePaymentMethods
+     *
+     * @return PurchaseRequest
+     */
+    public function setAvailablePaymentMethods(?string $availablePaymentMethods): PurchaseRequest
+    {
+        $this->setParameter('availablePaymentMethods', $availablePaymentMethods);
+
+        return $this;
+    }
+
 
 
     /**
@@ -120,7 +141,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
         $data['redirectCallable'] = $this->getRedirectCallable();
-
+        $data['availablePaymentMethods'] = $this->getAvailablePaymentMethods();
 
         return $data;
     }
@@ -161,23 +182,9 @@ class PurchaseRequest extends AbstractRequest
 
     public function getPayperMailServices()
     {
-        switch($this->getSiteId()){
-            case Site::SWNL:
-                $allowedPaymentMethods = 'ideal,mastercard,visa,meastro,paypal,transfer';
-                break;
-            case Site::SWBE:
-                $allowedPaymentMethods = 'bancontact,mastercard,visa,meastro,paypal,transfer';
-                break;
-            case Site::MSFR:
-                $allowedPaymentMethods = 'mastercard,visa,meastro,paypal,transfer';
-                break;
-            default:
-                $allowedPaymentMethods = 'mastercard,visa,meastro,paypal,transfer';
-                break;
-        }
-
         $data = [];
-        $transferCustomerData = $this->getParameter('transferCustomerData');
+        $customerData = $this->getParameter('customerData');
+
         $data['Services'] = [
             'ServiceList' => [
                 [
@@ -194,11 +201,11 @@ class PurchaseRequest extends AbstractRequest
                         ],
                         [
                             'Name' => 'ExpirationDate',
-                            'Value' => $transferCustomerData['dueDate']->format('Y-m-d'),
+                            'Value' => $customerData['dueDate']->format('Y-m-d'),
                         ],
                         [
                             'Name' => 'PaymentMethodsAllowed',
-                            'Value' => $allowedPaymentMethods,
+                            'Value' => $this->getAvailablePaymentMethods(),
                         ],
                         [
                             'Name' => 'Attachment',
@@ -206,15 +213,15 @@ class PurchaseRequest extends AbstractRequest
                         ],
                         [
                             'Name' => 'CustomerEmail',
-                            'Value' => $transferCustomerData['email'],
+                            'Value' => $customerData['email'],
                         ],
                         [
                             'Name' => 'CustomerFirstName',
-                            'Value' => $transferCustomerData['firstName'],
+                            'Value' => $customerData['firstName'],
                         ],
                         [
                             'Name' => 'CustomerLastName',
-                            'Value' => $transferCustomerData['lastName'],
+                            'Value' => $customerData['lastName'],
                         ],
                     ],
                 ],
@@ -340,7 +347,7 @@ class PurchaseRequest extends AbstractRequest
                 break;
             case 'transfer':
                 try {
-                    $transferCustomerData = $this->getParameter('transferCustomerData');
+                    $transferCustomerData = $this->getParameter('customerData');
                     $data['Services'] = [
                         'ServiceList' => [
                             [
