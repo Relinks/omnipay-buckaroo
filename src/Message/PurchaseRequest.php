@@ -155,7 +155,7 @@ class PurchaseRequest extends AbstractRequest
         $jsonData = json_encode($data);
 
         $endpoint = $this->getEndpoint('/Transaction');
-        print_r($jsonData);
+
         try {
             $response = $this->httpClient->request(
                 'POST',
@@ -167,9 +167,9 @@ class PurchaseRequest extends AbstractRequest
                 ],
                 $jsonData
             );
-
+            print_r($response->getHeaders());
             $respData = json_decode((string) $response->getBody(), true);
-            print_r($respData);
+
         } catch (Throwable $t) {
             throw new RuntimeException('Could not send the request', 0, $t);
         }
