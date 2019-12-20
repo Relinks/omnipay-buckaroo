@@ -167,7 +167,7 @@ class PurchaseRequest extends AbstractRequest
                 ],
                 $jsonData
             );
-
+            print_r($response->getStatusCode());
             $respData = json_decode((string) $response->getBody(), true);
 
         } catch (Throwable $t) {
