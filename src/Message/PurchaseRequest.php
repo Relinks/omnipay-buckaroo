@@ -167,9 +167,7 @@ class PurchaseRequest extends AbstractRequest
                 ],
                 $jsonData
             );
-            print_r($response->getStatusCode());
             $respData = json_decode((string) $response->getBody(), true);
-
         } catch (Throwable $t) {
             throw new RuntimeException('Could not send the request', 0, $t);
         }
