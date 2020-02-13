@@ -11,6 +11,7 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
+    /** @var callable|null */
     private $callableFunctionRedirect;
 
     /**
@@ -30,7 +31,9 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function isRedirect(): bool
     {
-        return $this->data['RequiredAction']['RedirectURL'] ? true : false;
+        $redirectURL = $this->data['RequiredAction']['RedirectURL'] ?? null;
+
+        return (bool)$redirectURL;
     }
 
     /**

@@ -11,7 +11,7 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class DataResponse extends AbstractResponse implements RedirectResponseInterface
 {
-
+    /** @var callable|null */
     private $callableFunctionRedirect;
 
     /**

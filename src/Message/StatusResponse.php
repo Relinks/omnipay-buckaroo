@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Omnipay\Buckaroo\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
-use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\Common\Message\RequestInterface;
 
 /**
  * Buckaroo Purchase Response

@@ -75,7 +75,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
      *
      * @return AbstractRequest
      */
-    public function setPayPermail(bool $value): AbstractRequest
+    public function setPayPerMail(bool $value): AbstractRequest
     {
         return $this->setParameter('payPerMail', $value);
     }

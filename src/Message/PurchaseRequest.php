@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\ResponseInterface;
 use Rorix\Core\Site\Model\Site;
@@ -101,8 +102,6 @@ class PurchaseRequest extends AbstractRequest
 
         return $this;
     }
-
-
 
     /**
      * {@inheritdoc}

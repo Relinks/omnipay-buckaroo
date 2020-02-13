@@ -3,6 +3,8 @@ namespace Omnipay\Buckaroo\Message;
 
 use DateTime;
 use DateInterval;
+use Omnipay\Common\Exception\RuntimeException;
+use Throwable;
 
 class DataRequest extends AbstractRequest
 {
@@ -17,7 +19,6 @@ class DataRequest extends AbstractRequest
     {
         return $this->getParameter('redirectCallable');
     }
-
 
     /**
      * {@inheritdoc}
@@ -128,6 +129,7 @@ class DataRequest extends AbstractRequest
                 ],
             ];
         }
+
         return $data;
     }
 }

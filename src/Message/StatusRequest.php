@@ -1,12 +1,16 @@
 <?php
 namespace Omnipay\Buckaroo\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\RuntimeException;
+use Throwable;
+
 class StatusRequest extends AbstractRequest
 {
     /**
      * {@inheritdoc}
      *
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * @throws InvalidRequestException
      */
     public function getData(): array
     {
