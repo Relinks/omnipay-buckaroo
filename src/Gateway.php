@@ -6,6 +6,7 @@ namespace Omnipay\Buckaroo;
 use Omnipay\Buckaroo\Message\DataRequest;
 use Omnipay\Buckaroo\Message\PurchaseRequest;
 use Omnipay\Buckaroo\Message\StatusRequest;
+use Omnipay\Buckaroo\Message\TransactionRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
@@ -76,5 +77,10 @@ class Gateway extends AbstractGateway
     public function data(array $parameters = [])
     {
         return $this->createRequest(DataRequest::class, $parameters);
+    }
+
+    public function transaction(array $parameters = [])
+    {
+        return $this->createRequest(TransactionRequest::class, $parameters);
     }
 }
