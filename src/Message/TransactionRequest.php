@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Omnipay\Buckaroo\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Throwable;
 
@@ -13,12 +14,21 @@ use Throwable;
  */
 class TransactionRequest extends AbstractRequest
 {
+    /**
+     * @return array
+     * @throws InvalidRequestException
+     */
     public function getData(): array
     {
         $data = parent::getData();
 
+        $data['Currency'] = $this->getCurrency();
+        $data['AmountCredit'] = $this->getAmount();
+        $data['Invoice'] = $this->getInvoice();
+        $data['OriginalTransactionKey'] = $this->getOriginalTransactionKey();
         $data['Services'] = $this->getServices();
 
+        return $data;
     }
 
     /**
@@ -60,9 +70,19 @@ class TransactionRequest extends AbstractRequest
         return $this->setParameter('Invoice', $invoice);
     }
 
+    public function getInvoice(): string
+    {
+        return $this->getParameter('Invoice') ?? '';
+    }
+
     public function setOriginalTransactionKey(string $transactionKey)
     {
         return $this->setParameter('OriginalTransactionKey', $transactionKey);
+    }
+
+    public function getOriginalTransactionKey(): string
+    {
+        return $this->getParameter('OriginalTransactionKey') ?? '';
     }
 
     private function getServices(): array
