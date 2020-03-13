@@ -22,6 +22,8 @@ class TransactionRequest extends AbstractRequest
     {
         $data = parent::getData();
 
+        $this->validate('AmountCredit', 'Invoice', 'OriginalTransactionKey');
+
         $data['Currency'] = $this->getCurrency();
         $data['AmountCredit'] = $this->getAmount();
         $data['Invoice'] = $this->getInvoice();
@@ -63,6 +65,11 @@ class TransactionRequest extends AbstractRequest
     public function setAmountCredit(string $amount)
     {
         return $this->setParameter('AmountCredit', $amount);
+    }
+
+    public function getAmountCredit(): string
+    {
+        return $this->getParameter('AmountCredit');
     }
 
     public function setInvoice(string $invoice)

@@ -137,9 +137,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
     {
         $this->validate('websiteKey', 'secretKey');
 
-        $data = [];
-
-        return $data;
+        return [];
     }
 
     /**
