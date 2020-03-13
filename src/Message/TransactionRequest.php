@@ -25,7 +25,7 @@ class TransactionRequest extends AbstractRequest
         $this->validate('AmountCredit', 'Invoice', 'OriginalTransactionKey');
 
         $data['Currency'] = $this->getCurrency();
-        $data['AmountCredit'] = $this->getAmount();
+        $data['AmountCredit'] = $this->getAmountCredit();
         $data['Invoice'] = $this->getInvoice();
         $data['OriginalTransactionKey'] = $this->getOriginalTransactionKey();
         $data['Services'] = $this->getServices();
