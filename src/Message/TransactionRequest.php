@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Omnipay\Buckaroo\Message;
 
+use GuzzleHttp\Exception\ServerException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Throwable;
@@ -96,8 +97,10 @@ class TransactionRequest extends AbstractRequest
     {
         return [
             'ServiceList' => [
-                'Name' => 'Ideal',
-                'Action' => 'Refund',
+                [
+                    'Name' => 'ideal',
+                    'Action' => 'Refund',
+                ],
             ],
         ];
     }
