@@ -66,7 +66,8 @@ class StatusResponse extends AbstractResponse
     {
         $status = $this->data['Status'] ?? [];
         $code = $status['Code'] ?? [];
-        return (string) $code['Code'] ?? null;
+        $code = $code['Code'] ?? null;
+        return $code === null ? null : (string) $code;
     }
 
     /*
@@ -74,6 +75,6 @@ class StatusResponse extends AbstractResponse
      */
     public function getAmountDebit(): ?string
     {
-        return (string) $this->data['AmountDebit'] ?? null;
+        return isset($this->data['AmountDebit']) ? (string) $this->data['AmountDebit'] : null;
     }
 }
