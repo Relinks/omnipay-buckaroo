@@ -22,7 +22,7 @@ class TransactionRequest extends AbstractRequest
     {
         $data = parent::getData();
 
-        $this->validate('AmountCredit', 'Invoice', 'OriginalTransactionKey', 'PaymentMethod');
+        $this->validate('AmountCredit', 'Invoice', 'OriginalTransactionKey', 'paymentMethod');
 
         $data['Currency'] = $this->getCurrency();
         $data['AmountCredit'] = $this->getAmountCredit();
@@ -94,12 +94,12 @@ class TransactionRequest extends AbstractRequest
 
     private function getServices(): array
     {
-        $paymentMethod = $this->getParameter('PaymentMethod');
+        $paymentMethod = $this->getParameter('paymentMethod');
 
         return [
             'ServiceList' => [
                 [
-                    'Name' => strtolower($paymentMethod),
+                    'Name' => $paymentMethod,
                     'Action' => 'Refund',
                 ],
             ],
