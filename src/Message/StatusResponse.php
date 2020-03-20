@@ -15,7 +15,7 @@ class StatusResponse extends AbstractResponse
      */
     public function isSuccessful(): bool
     {
-        return $this->getCode() ==='190';
+        return $this->getCode() === '190';
     }
 
     /**
@@ -28,7 +28,7 @@ class StatusResponse extends AbstractResponse
     {
         $data = $this->getData();
 
-        return $data['ServiceCode'];
+        return $data['ServiceCode'] ?? '';
     }
 
     /**
@@ -64,7 +64,10 @@ class StatusResponse extends AbstractResponse
      */
     public function getCode(): ?string
     {
-        return (string) $this->data['Status']['Code']['Code'] ?? null;
+        $status = $this->data['Status'] ?? [];
+        $code = $status['Code'] ?? [];
+        $code = $code['Code'] ?? null;
+        return $code === null ? null : (string) $code;
     }
 
     /*
@@ -72,6 +75,6 @@ class StatusResponse extends AbstractResponse
      */
     public function getAmountDebit(): ?string
     {
-        return (string) $this->data['AmountDebit'] ?? null;
+        return isset($this->data['AmountDebit']) ? (string) $this->data['AmountDebit'] : null;
     }
 }

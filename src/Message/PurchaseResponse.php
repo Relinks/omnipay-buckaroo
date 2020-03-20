@@ -82,7 +82,10 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function getCode(): ?string
     {
-        return (string) $this->data['Status']['Code']['Code'] ?? null;
+        $status = $this->data['Status'] ?? [];
+        $code = $status['Code'] ?? [];
+        $code = $code['Code'] ?? null;
+        return $code === null ? null : (string) $code;
     }
 
     /**
