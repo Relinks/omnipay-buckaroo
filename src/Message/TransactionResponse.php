@@ -11,6 +11,7 @@ use Omnipay\Common\Message\AbstractResponse;
 class TransactionResponse extends AbstractResponse
 {
     private const SUCCESS = '190';
+    private const PENDING_INPUT = '790';
     private const PENDING = '791';
 
     /**
@@ -28,7 +29,7 @@ class TransactionResponse extends AbstractResponse
     public function isPending(): bool
     {
         // Pending Processing (791): The transaction is being processed.
-        return $this->getCode() === self::PENDING;
+        return $this->getCode() === self::PENDING || $this->getCode() === self::PENDING_INPUT;
     }
 
     /**
