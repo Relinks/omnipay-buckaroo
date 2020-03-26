@@ -10,10 +10,10 @@ use Omnipay\Common\Message\AbstractResponse;
  */
 class TransactionResponse extends AbstractResponse
 {
-    private const SUCCESS = '190';
-    private const PENDING_INPUT = '790';
-    private const PENDING = '791';
-    private const PENDING_APPROVAL = '794';
+    private const SUCCESS = 190;
+    private const PENDING_INPUT = 790;
+    private const PENDING = 791;
+    private const PENDING_APPROVAL = 794;
 
     /**
      * @inheritDoc
@@ -35,7 +35,7 @@ class TransactionResponse extends AbstractResponse
             self::PENDING,
             self::PENDING_APPROVAL
         ];
-        return in_array($this->getCode(), $pendingStatuses, true);
+        return in_array($this->getCode(), $pendingStatuses);
     }
 
     /**
@@ -43,12 +43,12 @@ class TransactionResponse extends AbstractResponse
      *  result is being casted to string because buckaroo returns an integer value.
      *  The abstract classes enforces a string value.
      */
-    public function getCode(): ?string
+    public function getCode(): ?int
     {
         $status = $this->data['Status'] ?? [];
         $code = $status['Code'] ?? [];
         $code = $code['Code'] ?? null;
-        return $code === null ? null : (string) $code;
+        return $code === null ? null : (int) $code;
     }
 
     /**
