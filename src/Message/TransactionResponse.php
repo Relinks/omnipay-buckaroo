@@ -13,6 +13,7 @@ class TransactionResponse extends AbstractResponse
     private const SUCCESS = '190';
     private const PENDING_INPUT = '790';
     private const PENDING = '791';
+    private const PENDING_APPROVAL = '794';
 
     /**
      * @inheritDoc
@@ -29,7 +30,12 @@ class TransactionResponse extends AbstractResponse
     public function isPending(): bool
     {
         // Pending Processing (791): The transaction is being processed.
-        return $this->getCode() === self::PENDING || $this->getCode() === self::PENDING_INPUT;
+        $pendingStatuses = [
+            self::PENDING_INPUT,
+            self::PENDING,
+            self::PENDING_APPROVAL
+        ];
+        return in_array($this->getCode(), $pendingStatuses, true);
     }
 
     /**
