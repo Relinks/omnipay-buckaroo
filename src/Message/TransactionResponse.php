@@ -52,4 +52,12 @@ class TransactionResponse extends AbstractResponse
     {
         return $this->data['Status']['Code']['Description'] ?? null;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransactionReference(): string
+    {
+        return $this->data['Key'] ?? '';
+    }
 }
