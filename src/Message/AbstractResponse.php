@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Omnipay\Buckaroo\Message;
 
 use Omnipay\Common\Message\AbstractResponse as CommonAbstractResponse;
+use function in_array;
 
 /**
  * Class AbstractResponse
@@ -58,6 +59,17 @@ abstract class AbstractResponse extends CommonAbstractResponse
             self::CANCELLED_BY_MERCHANT,
         ];
         return in_array((int) $this->getCode(), $cancelledStatuses);
+    }
+
+    public function isFailed(): bool
+    {
+        $failedStatuses = [
+            self::FAILED_TRANSACTION,
+            self::FAILED_VALIDATION,
+            self::FAILED_TECH_ERROR,
+            self::FAILED_DENIED,
+        ];
+        return in_array((int) $this->getCode(), $failedStatuses);
     }
 
     /**
