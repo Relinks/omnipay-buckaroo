@@ -3,21 +3,11 @@ declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
 
-use Omnipay\Common\Message\AbstractResponse;
-
 /**
  * Buckaroo Purchase Response
  */
 class StatusResponse extends AbstractResponse
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function isSuccessful(): bool
-    {
-        return $this->getCode() === '190';
-    }
-
     /**
      *
      * get the servicecode of the response this is usually the paymentmethod
@@ -29,17 +19,6 @@ class StatusResponse extends AbstractResponse
         $data = $this->getData();
 
         return $data['ServiceCode'] ?? '';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPending(): bool
-    {
-        // 790 = Pending Input
-        // 791 = Pending Processing
-        // 792 = Awaiting Consumer
-        return in_array($this->getCode(), ['790', '791', '792']);
     }
 
     /**
@@ -57,17 +36,6 @@ class StatusResponse extends AbstractResponse
         }
 
         return $parameters;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCode(): ?string
-    {
-        $status = $this->data['Status'] ?? [];
-        $code = $status['Code'] ?? [];
-        $code = $code['Code'] ?? null;
-        return $code === null ? null : (string) $code;
     }
 
     /*
