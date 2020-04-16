@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
 
-use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
 /**
@@ -23,7 +22,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
             return false;
         }
         // 190 = Success
-        return in_array($this->getCode(), ['190']);
+        return parent::isSuccessful();
     }
 
     /**
@@ -34,23 +33,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
         $redirectURL = $this->data['RequiredAction']['RedirectURL'] ?? null;
 
         return (bool)$redirectURL;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isCancelled(): bool
-    {
-        return $this->getCode() === '890';
-    }
-
-    public function isPending()
-    {
-        // 790 = Pending Input
-        // 791 = Pending Processing
-        // 792 = Waiting for consumer
-
-        return in_array($this->getCode(), ['790', '791', '792']);
     }
 
     /**
@@ -73,19 +55,6 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getRedirectMethod(): string
     {
         return 'GET';
-    }
-
-    /**
-     * {@inheritdoc}
-     *  result is being casted to string because buckaroo returns an integer value.
-     *  The abstract classes enforces a string value.
-     */
-    public function getCode(): ?string
-    {
-        $status = $this->data['Status'] ?? [];
-        $code = $status['Code'] ?? [];
-        $code = $code['Code'] ?? null;
-        return $code === null ? null : (string) $code;
     }
 
     /**
