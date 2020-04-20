@@ -111,4 +111,14 @@ class TransactionRequest extends AbstractRequest
             ],
         ];
     }
+
+    public function getPushURL(): string
+    {
+        return $this->getParameter('PushURL') ?? '';
+    }
+
+    public function setPushURL(string $pushURL)
+    {
+        return $this->setParameter('PushURL', $pushURL);
+    }
 }
