@@ -32,6 +32,9 @@ class TransactionRequest extends AbstractRequest
         if (! empty($this->getPushURL())) {
             $data['PushURL'] = $this->getPushURL();
         }
+        if ($this->getDescription()) {
+            $data['Description'] = $this->getDescription();
+        }
 
         return $data;
     }
@@ -107,15 +110,5 @@ class TransactionRequest extends AbstractRequest
                 ],
             ],
         ];
-    }
-
-    public function getPushURL(): string
-    {
-        return $this->getParameter('PushURL') ?? '';
-    }
-
-    public function setPushURL(string $pushURL)
-    {
-        return $this->setParameter('PushURL', $pushURL);
     }
 }
