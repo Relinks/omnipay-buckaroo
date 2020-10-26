@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
@@ -6,7 +7,6 @@ namespace Omnipay\Buckaroo\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\ResponseInterface;
-use Rorix\Core\Site\Model\Site;
 use Throwable;
 
 class PurchaseRequest extends AbstractRequest
@@ -99,6 +99,46 @@ class PurchaseRequest extends AbstractRequest
     public function setAvailablePaymentMethods(?string $availablePaymentMethods): PurchaseRequest
     {
         $this->setParameter('availablePaymentMethods', $availablePaymentMethods);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDeliveryMethod(): ?string
+    {
+        return $this->getParameter('deliveryMethod');
+    }
+
+    /**
+     * @param string|null $deliveryMethod
+     *
+     * @return $this
+     */
+    public function setDeliveryMethod(?string $deliveryMethod): PurchaseRequest
+    {
+        $this->setParameter('deliveryMethod', $deliveryMethod);
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getOrderLines(): ?array
+    {
+        return $this->getParameter('orderLines');
+    }
+
+    /**
+     * @param array|null $orderLines
+     *
+     * @return $this
+     */
+    public function setOrderLines(?array $orderLines): PurchaseRequest
+    {
+        $this->setParameter('orderLines', $orderLines);
 
         return $this;
     }
@@ -290,7 +330,7 @@ class PurchaseRequest extends AbstractRequest
                     ];
                 } else {
                     //MSFR has cartebleuevisa and cartebancaire as an extra option
-                    $selectableServices = $this->getSiteId() == Site::MSFR
+                    $selectableServices = $this->getSiteId() == 7
                         ? 'visa, mastercard, maestro, cartebleuevisa, cartebancaire' : 'visa, mastercard';
 
                     $data['ServicesSelectableByClient'] = $selectableServices;
@@ -386,6 +426,56 @@ class PurchaseRequest extends AbstractRequest
                 } catch (Throwable $t) {
                     throw new InvalidRequestException('Incomplete billing address');
                 }
+                break;
+            case 'Tinka':
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                            'Parameters' => [
+                                [
+                                    'Name' => 'PaymentMethod',
+                                    'Value' => 'Credit',
+                                ],
+                                [
+                                    'Name' => 'DeliveryMethod',
+                                    'Value' => $this->getDeliveryMethod(),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+                foreach ($this->getOrderLines() as $id => $orderLine) {
+                    $orderLineData = [
+                        [
+                            'Name' => 'UnitCode',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['UnitCode'],
+                        ],
+                        [
+                            'Name' => 'UnitGrossPrice',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['UnitGrossPrice'],
+                        ],
+                        [
+                            'Name' => 'Quantity',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['Quantity'],
+                        ],
+                        [
+                            'Name' => 'Description',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['Description'],
+                        ],
+                    ];
+                    $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
+                }
+                break;
         }
 
         return $data;
