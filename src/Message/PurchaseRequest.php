@@ -40,7 +40,7 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
-     * @param array|null $encryptedKey
+     * @param array|null $customerData
      *
      * @return PurchaseRequest
      */
@@ -428,6 +428,7 @@ class PurchaseRequest extends AbstractRequest
                 }
                 break;
             case 'Tinka':
+                $customerData = $this->getCustomerData();
                 $data['Services'] = [
                     'ServiceList' => [
                         [
@@ -441,6 +442,74 @@ class PurchaseRequest extends AbstractRequest
                                 [
                                     'Name' => 'DeliveryMethod',
                                     'Value' => $this->getDeliveryMethod(),
+                                ],
+                                [
+                                    'Name' => 'LastName',
+                                    'Value' => $customerData['lastName'],
+                                ],
+                                [
+                                    'Name' => 'Gender',
+                                    'Value' => (string) $customerData['gender'],
+                                ],
+                                [
+                                    'Name' => 'Email',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['email'],
+                                ],
+                                [
+                                    'Name' => 'Street',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['street'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumber',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['houseNumber'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumberAdditional',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['houseNumberExtension'],
+                                ],
+                                [
+                                    'Name' => 'PostalCode',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['postalCode'],
+                                ],
+                                [
+                                    'Name' => 'City',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['city'],
+                                ],
+                                [
+                                    'Name' => 'Email',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['email'],
+                                ],
+                                [
+                                    'Name' => 'Street',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['street'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumber',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['houseNumber'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumberAdditional',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['houseNumberExtension'],
+                                ],
+                                [
+                                    'Name' => 'PostalCode',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['postalCode'],
+                                ],
+                                [
+                                    'Name' => 'City',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['city'],
                                 ],
                             ],
                         ],
