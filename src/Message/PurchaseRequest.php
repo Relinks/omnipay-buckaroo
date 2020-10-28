@@ -539,7 +539,7 @@ class PurchaseRequest extends AbstractRequest
                             'Name' => 'Description',
                             'GroupType' => 'Article',
                             'GroupId' => (string) $id,
-                            'Value' => $orderLine['Description'],
+                            'Value' => mb_substr($orderLine['Description'], 0, 100),
                         ],
                     ];
                     $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
