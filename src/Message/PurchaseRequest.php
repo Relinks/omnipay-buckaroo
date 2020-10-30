@@ -8,6 +8,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\ResponseInterface;
 use Throwable;
+use const FILTER_FLAG_IPV6;
 
 class PurchaseRequest extends AbstractRequest
 {
@@ -167,7 +168,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ClientIP'] = [
             // 0 = IPV4
             // 1 = IPV6
-            'Type' => (int)filter_var($this->getClientIp(), FILTER_FLAG_IPV6),
+            'Type' => (int)filter_var($this->getClientIp(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6),
             'Address' => $this->getClientIp(),
         ];
         $data['Currency'] = $this->getCurrency();
