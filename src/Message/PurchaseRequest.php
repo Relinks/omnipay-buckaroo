@@ -8,7 +8,6 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\ResponseInterface;
 use Throwable;
-use const FILTER_FLAG_IPV6;
 
 class PurchaseRequest extends AbstractRequest
 {
