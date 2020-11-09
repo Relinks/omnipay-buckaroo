@@ -53,6 +53,14 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isRejected(): bool
+    {
+        return $this->data['brq_statuscode'] == 690;
+    }
+
+    /**
      * Response Message
      *
      * @return string A response message from the payment gateway
