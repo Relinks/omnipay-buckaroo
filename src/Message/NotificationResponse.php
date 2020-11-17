@@ -46,8 +46,18 @@ class NotificationResponse implements NotificationInterface
     {
         if ($this->data['brq_statuscode'] == 190) {
             return NotificationInterface::STATUS_COMPLETED;
+        } elseif ($this->data['brq_statuscode'] == 791) {
+            return NotificationInterface::STATUS_PENDING;
         }
         return NotificationInterface::STATUS_FAILED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRejected(): bool
+    {
+        return $this->data['brq_statuscode'] == 690;
     }
 
     /**

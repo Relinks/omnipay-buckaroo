@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
@@ -6,7 +7,6 @@ namespace Omnipay\Buckaroo\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Common\Message\ResponseInterface;
-use Rorix\Core\Site\Model\Site;
 use Throwable;
 
 class PurchaseRequest extends AbstractRequest
@@ -40,7 +40,7 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
-     * @param array|null $encryptedKey
+     * @param array|null $customerData
      *
      * @return PurchaseRequest
      */
@@ -104,6 +104,46 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * @return string|null
+     */
+    public function getDeliveryMethod(): ?string
+    {
+        return $this->getParameter('deliveryMethod');
+    }
+
+    /**
+     * @param string|null $deliveryMethod
+     *
+     * @return $this
+     */
+    public function setDeliveryMethod(?string $deliveryMethod): PurchaseRequest
+    {
+        $this->setParameter('deliveryMethod', $deliveryMethod);
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getOrderLines(): ?array
+    {
+        return $this->getParameter('orderLines');
+    }
+
+    /**
+     * @param array|null $orderLines
+     *
+     * @return $this
+     */
+    public function setOrderLines(?array $orderLines): PurchaseRequest
+    {
+        $this->setParameter('orderLines', $orderLines);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -127,7 +167,7 @@ class PurchaseRequest extends AbstractRequest
         $data['ClientIP'] = [
             // 0 = IPV4
             // 1 = IPV6
-            'Type' => (int)filter_var($this->getClientIp(), FILTER_FLAG_IPV6),
+            'Type' => (int)filter_var($this->getClientIp(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6),
             'Address' => $this->getClientIp(),
         ];
         $data['Currency'] = $this->getCurrency();
@@ -290,7 +330,7 @@ class PurchaseRequest extends AbstractRequest
                     ];
                 } else {
                     //MSFR has cartebleuevisa and cartebancaire as an extra option
-                    $selectableServices = $this->getSiteId() == Site::MSFR
+                    $selectableServices = $this->getSiteId() == 7
                         ? 'visa, mastercard, maestro, cartebleuevisa, cartebancaire' : 'visa, mastercard';
 
                     $data['ServicesSelectableByClient'] = $selectableServices;
@@ -386,6 +426,125 @@ class PurchaseRequest extends AbstractRequest
                 } catch (Throwable $t) {
                     throw new InvalidRequestException('Incomplete billing address');
                 }
+                break;
+            case 'Tinka':
+                $customerData = $this->getCustomerData();
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                            'Parameters' => [
+                                [
+                                    'Name' => 'PaymentMethod',
+                                    'Value' => 'Credit',
+                                ],
+                                [
+                                    'Name' => 'DeliveryMethod',
+                                    'Value' => $this->getDeliveryMethod(),
+                                ],
+                                [
+                                    'Name' => 'LastName',
+                                    'Value' => $customerData['lastName'],
+                                ],
+                                [
+                                    'Name' => 'Gender',
+                                    'Value' => (string) $customerData['gender'],
+                                ],
+                                [
+                                    'Name' => 'Email',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['email'],
+                                ],
+                                [
+                                    'Name' => 'Street',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['street'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumber',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['houseNumber'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumberAdditional',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['houseNumberExtension'],
+                                ],
+                                [
+                                    'Name' => 'PostalCode',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['postalCode'],
+                                ],
+                                [
+                                    'Name' => 'City',
+                                    'GroupType' => 'BillingCustomer',
+                                    'Value' => $customerData['billingAddress']['city'],
+                                ],
+                                [
+                                    'Name' => 'Email',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['email'],
+                                ],
+                                [
+                                    'Name' => 'Street',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['street'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumber',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['houseNumber'],
+                                ],
+                                [
+                                    'Name' => 'StreetNumberAdditional',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['houseNumberExtension'],
+                                ],
+                                [
+                                    'Name' => 'PostalCode',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['postalCode'],
+                                ],
+                                [
+                                    'Name' => 'City',
+                                    'GroupType' => 'ShippingCustomer',
+                                    'Value' => $customerData['shippingAddress']['city'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+                foreach ($this->getOrderLines() as $id => $orderLine) {
+                    $orderLineData = [
+                        [
+                            'Name' => 'UnitCode',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['UnitCode'],
+                        ],
+                        [
+                            'Name' => 'UnitGrossPrice',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['UnitGrossPrice'],
+                        ],
+                        [
+                            'Name' => 'Quantity',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['Quantity'],
+                        ],
+                        [
+                            'Name' => 'Description',
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => mb_substr($orderLine['Description'], 0, 100),
+                        ],
+                    ];
+                    $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
+                }
+                break;
         }
 
         return $data;
