@@ -545,6 +545,7 @@ class PurchaseRequest extends AbstractRequest
                 break;
             case 'klarnakp':
                 $customerData = $this->getCustomerData();
+                $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
                 $data['Services'] = [
                     'ServiceList' => [
                         [
@@ -642,6 +643,10 @@ class PurchaseRequest extends AbstractRequest
                                 [
                                     'Name' => 'Pno',
                                     'Value' => $customerData['dateOfBirth']->format('dmY'),
+                                ],
+                                [
+                                    'Name' => 'ShippingSameAsBilling',
+                                    'Value' => $shippingSameAsBilling ? 'true' : 'false',
                                 ],
                             ],
                         ],
