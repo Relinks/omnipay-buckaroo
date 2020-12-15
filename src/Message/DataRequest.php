@@ -16,7 +16,7 @@ class DataRequest extends AbstractRequest
         return $this;
     }
 
-    public function getRedirectCallable(): ?callable
+    public function getRedirectCallable(): callable
     {
         return $this->getParameter('redirectCallable');
     }
