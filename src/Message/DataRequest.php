@@ -4,6 +4,7 @@ namespace Omnipay\Buckaroo\Message;
 use DateTime;
 use DateInterval;
 use Omnipay\Common\Exception\RuntimeException;
+use Omnipay\Common\Message\ResponseInterface;
 use Throwable;
 
 class DataRequest extends AbstractRequest
@@ -94,7 +95,10 @@ class DataRequest extends AbstractRequest
         return $data;
     }
 
-    public function sendData($data)
+    /**
+     * @inheritDoc
+     */
+    public function sendData($data): ResponseInterface
     {
         ksort($data);
         $jsonData = json_encode($data);

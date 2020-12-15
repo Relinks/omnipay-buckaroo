@@ -70,7 +70,7 @@ class DataResponse extends AbstractResponse implements RedirectResponseInterface
 
     public function isRedirect()
     {
-        return $this->data['ServiceCode'] === 'IdealQr';
+        return $this->data['ServiceCode'] === 'IdealQr' || $this->data['ServiceCode'] === 'KlarnaKp';
     }
 
     public function setCallableFunctionRedirect($callableFunctionRedirect)
