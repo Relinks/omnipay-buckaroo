@@ -21,6 +21,46 @@ class DataRequest extends AbstractRequest
     }
 
     /**
+     * @return array|null
+     */
+    public function getCustomerData(): ?array
+    {
+        return $this->getParameter('customerData');
+    }
+
+    /**
+     * @param array|null $customerData
+     *
+     * @return DataRequest
+     */
+    public function setCustomerdata(?array $customerData): DataRequest
+    {
+        $this->setParameter('customerData', $customerData);
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getOrderLines(): ?array
+    {
+        return $this->getParameter('orderLines');
+    }
+
+    /**
+     * @param array|null $orderLines
+     *
+     * @return DataRequest
+     */
+    public function setOrderLines(?array $orderLines): DataRequest
+    {
+        $this->setParameter('orderLines', $orderLines);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -43,7 +83,7 @@ class DataRequest extends AbstractRequest
         ];
         $data['Currency'] = $this->getCurrency();
         $data['AmountDebit'] = $this->getAmount();
-//        $data['Invoice'] = $this->getTransactionId();
+        $data['Invoice'] = $this->getTransactionId();
         $data['ReturnUrl'] = $this->getReturnUrl();
         $data['ReturnURLCancel'] = $this->getCancelUrl();
         $data['ReturnURLError'] = $this->getCancelUrl();
@@ -128,8 +168,157 @@ class DataRequest extends AbstractRequest
                     ],
                 ],
             ];
+        } elseif ($this->getIssuer() =='klarnakp') {
+            $customerData = $this->getCustomerData();
+            $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
+            $data['Services'] = [
+                'ServiceList' => [
+                    [
+                        'Name' => $this->getPaymentMethod(),
+                        'Action' => 'Reserve',
+                        'Parameters' => [
+                            [
+                                'Name' => 'BillingFirstName',
+                                'Value' => $customerData['firstName'],
+                            ],
+                            [
+                                'Name' => 'BillingLastName',
+                                'Value' => $customerData['lastName'],
+                            ],
+                            [
+                                'Name' => 'BillingStreet',
+                                'Value' => $customerData['billingAddress']['street'],
+                            ],
+                            [
+                                'Name' => 'BillingHouseNumber',
+                                'Value' => $customerData['billingAddress']['houseNumber'],
+                            ],
+                            [
+                                'Name' => 'BillingHouseNumberSuffix',
+                                'Value' => $customerData['billingAddress']['houseNumberExtension'],
+                            ],
+                            [
+                                'Name' => 'BillingPostalCode',
+                                'Value' => $customerData['billingAddress']['postalCode'],
+                            ],
+                            [
+                                'Name' => 'BillingCity',
+                                'Value' => $customerData['billingAddress']['city'],
+                            ],
+                            [
+                                'Name' => 'BillingCountry',
+                                'Value' => $customerData['billingAddress']['country'],
+                            ],
+                            [
+                                'Name' => 'BillingCellPhoneNumber',
+                                'Value' => $customerData['billingAddress']['phoneNumber'],
+                            ],
+                            [
+                                'Name' => 'BillingEmail',
+                                'Value' => $customerData['billingAddress']['email'],
+                            ],
+                            [
+                                'Name' => 'ShippingFirstName',
+                                'Value' => $customerData['firstName'],
+                            ],
+                            [
+                                'Name' => 'ShippingLastName',
+                                'Value' => $customerData['lastName'],
+                            ],
+                            [
+                                'Name' => 'ShippingStreet',
+                                'Value' => $customerData['shippingAddress']['street'],
+                            ],
+                            [
+                                'Name' => 'ShippingHouseNumber',
+                                'Value' => $customerData['shippingAddress']['houseNumber'],
+                            ],
+                            [
+                                'Name' => 'ShippingHouseNumberSuffix',
+                                'Value' => $customerData['shippingAddress']['houseNumberExtension'],
+                            ],
+                            [
+                                'Name' => 'ShippingPostalCode',
+                                'Value' => $customerData['shippingAddress']['postalCode'],
+                            ],
+                            [
+                                'Name' => 'ShippingCity',
+                                'Value' => $customerData['shippingAddress']['city'],
+                            ],
+                            [
+                                'Name' => 'ShippingCountry',
+                                'Value' => $customerData['shippingAddress']['country'],
+                            ],
+                            [
+                                'Name' => 'ShippingPhoneNumber',
+                                'Value' => $customerData['shippingAddress']['houseNumber'],
+                            ],
+                            [
+                                'Name' => 'ShippingEmail',
+                                'Value' => $customerData['shippingAddress']['email'],
+                            ],
+                            [
+                                'Name' => 'Gender',
+                                'Value' => (string)$customerData['gender'],
+                            ],
+                            [
+                                'Name' => 'OperatingCountry',
+                                'Value' => 'NL',
+                            ],
+                            [
+                                'Name' => 'Pno',
+                                'Value' => $customerData['dateOfBirth']->format('dmY'),
+                            ],
+                            [
+                                'Name' => 'ShippingSameAsBilling',
+                                'Value' => $shippingSameAsBilling ? 'true' : 'false',
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            foreach ($this->getOrderLines() as $id => $orderLine) {
+                $orderLineData = [
+                    [
+                        'Name' => 'ArticleNumber',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => $orderLine['ArticleNumber'],
+                    ],
+                    [
+                        'Name' => 'ArticlePrice',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => $orderLine['ArticlePrice'],
+                    ],
+                    [
+                        'Name' => 'ArticleQuantity',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => $orderLine['Quantity'],
+                    ],
+                    [
+                        'Name' => 'ArticleTitle',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => mb_substr($orderLine['ArticleTitle'], 0, 100),
+                    ],
+                    [
+                        'Name' => 'ArticleVat',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => $orderLine['ArticleVat'],
+                    ],
+                    [
+                        'Name' => 'ArticleType',
+                        'GroupType' => 'Article',
+                        'GroupId' => (string)$id,
+                        'Value' => $orderLine['ArticleType'],
+                    ],
+                ];
+                $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
+            }
         }
-
         return $data;
     }
 }
