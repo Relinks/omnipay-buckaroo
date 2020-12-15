@@ -647,6 +647,41 @@ class PurchaseRequest extends AbstractRequest
                         ],
                     ],
                 ];
+                foreach ($this->getOrderLines() as $id => $orderLine) {
+                    $orderLineData = [
+                        [
+                            'Name' => 'ArticleNumber',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['ArticleNumber'],
+                        ],
+                        [
+                            'Name' => 'ArticlePrice',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['ArticlePrice'],
+                        ],
+                        [
+                            'Name' => 'Quantity',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['Quantity'],
+                        ],
+                        [
+                            'Name' => 'ArticleTitle',
+                            'GroupId' => (string) $id,
+                            'Value' => mb_substr($orderLine['ArticleTitle'], 0, 100),
+                        ],
+                        [
+                            'Name' => 'ArticleVat',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['ArticleVat'],
+                        ],
+                        [
+                            'Name' => 'ArticleType',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['ArticleType'],
+                        ]
+                    ];
+                    $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
+                }
                 break;
         }
 
