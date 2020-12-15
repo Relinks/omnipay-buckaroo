@@ -15,7 +15,7 @@ class DataRequest extends AbstractRequest
         return $this;
     }
 
-    public function getRedirectCallable():callable
+    public function getRedirectCallable(): ?callable
     {
         return $this->getParameter('redirectCallable');
     }
@@ -168,7 +168,7 @@ class DataRequest extends AbstractRequest
                     ],
                 ],
             ];
-        } elseif ($this->getIssuer() =='klarnakp') {
+        } elseif ($this->getPaymentMethod() =='klarnakp') {
             $customerData = $this->getCustomerData();
             $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
             $data['Services'] = [
