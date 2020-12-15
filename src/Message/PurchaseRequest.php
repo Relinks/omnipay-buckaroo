@@ -582,11 +582,11 @@ class PurchaseRequest extends AbstractRequest
                             ],
                             [
                                 'Name' => 'BillingCountry',
-                                'Value' => '',
+                                'Value' => $customerData['billingAddress']['country'],
                             ],
                             [
                                 'Name' => 'BillingCellPhoneNumber',
-                                'Value' => '',
+                                'Value' => $customerData['billingAddress']['phoneNumber'],
                             ],
                             [
                                 'Name' => 'BillingEmail',
@@ -618,7 +618,7 @@ class PurchaseRequest extends AbstractRequest
                             ],
                             [
                                 'Name' => 'ShippingCountry',
-                                'Value' => '',
+                                'Value' => $customerData['shippingAddress']['country'],
                             ],
                             [
                                 'Name' => 'ShippingPhoneNumber',
@@ -678,7 +678,7 @@ class PurchaseRequest extends AbstractRequest
                             'Name' => 'ArticleType',
                             'GroupId' => (string) $id,
                             'Value' => $orderLine['ArticleType'],
-                        ]
+                        ],
                     ];
                     $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
                 }
