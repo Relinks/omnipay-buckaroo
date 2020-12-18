@@ -101,4 +101,9 @@ class NotificationResponse implements NotificationInterface
     {
         return $this->data['brq_transaction_type'];
     }
+
+    public function getKlarnaReservationNumber(): ?string
+    {
+        return $this->data['brq_SERVICE_klarnakp_ReservationNumber'] ?? null;
+    }
 }
