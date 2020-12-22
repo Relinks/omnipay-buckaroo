@@ -146,7 +146,7 @@ class PurchaseRequest extends AbstractRequest
     /**
      * @return string|null
      */
-    public function getKlarnaReservationNumber(): ?string
+    public function getReservationNumber(): ?string
     {
         return $this->getParameter('reservationNumber');
     }
@@ -156,7 +156,7 @@ class PurchaseRequest extends AbstractRequest
      *
      * @return $this
      */
-    public function seKlarnaReservationNumber(?string $reservationNumber): PurchaseRequest
+    public function setReservationNumber(?string $reservationNumber): PurchaseRequest
     {
         $this->setParameter('reservationNumber', $reservationNumber);
 
@@ -571,11 +571,11 @@ class PurchaseRequest extends AbstractRequest
                             'Parameters' => [
                                 [
                                     'Name' => 'ReservationNumber',
-                                    'Value' => $this->getKlarnaReservationNumber(),
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'Value' => $this->getReservationNumber(),
+                                ],
+                            ],
+                        ],
+                    ],
                 ];
                 break;
         }
