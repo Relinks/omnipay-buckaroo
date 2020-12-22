@@ -31,9 +31,9 @@ class NotificationResponse implements NotificationInterface
      *
      * @return string A reference provided by the gateway to represent this transaction
      */
-    public function getTransactionReference()
+    public function getTransactionReference(): ?string
     {
-        return $this->data['brq_transactions'];
+        return $this->data['brq_transactions'] ?? null;
     }
 
     /**
@@ -73,9 +73,9 @@ class NotificationResponse implements NotificationInterface
     /**
      * @return string
      */
-    public function getAmount()
+    public function getAmount(): ?string
     {
-        return $this->data['brq_amount'];
+        return $this->data['brq_amount'] ?? null;
     }
 
     /**
