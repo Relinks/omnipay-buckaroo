@@ -97,13 +97,23 @@ class NotificationResponse implements NotificationInterface
     /**
      * return string
      */
-    public function getTransactionType()
+    public function getTransactionType(): string
     {
-        return $this->data['brq_transaction_type'];
+        return $this->data['brq_transaction_type'] ?? '';
     }
 
     public function getKlarnaReservationNumber(): ?string
     {
         return $this->data['brq_SERVICE_klarnakp_ReservationNumber'] ?? null;
+    }
+
+    public function isKlarnaResponse(): bool
+    {
+        return $this->data['brq_primary_service'] === 'KlarnaKp';
+    }
+
+    public function getKlarnaTransactionReference(): ?string
+    {
+        return $this->data['brq_datarequest'] ?? null;
     }
 }
