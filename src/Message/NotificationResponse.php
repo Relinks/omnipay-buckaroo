@@ -29,7 +29,7 @@ class NotificationResponse implements NotificationInterface
     /**
      * Gateway Reference
      *
-     * @return string A reference provided by the gateway to represent this transaction
+     * @return string|null A reference provided by the gateway to represent this transaction
      */
     public function getTransactionReference(): ?string
     {
@@ -95,23 +95,32 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
-     * return string
+     * @return string|null
      */
-    public function getTransactionType(): string
+    public function getTransactionType(): ?string
     {
-        return $this->data['brq_transaction_type'] ?? '';
+        return $this->data['brq_transaction_type'] ?? null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getKlarnaReservationNumber(): ?string
     {
         return $this->data['brq_SERVICE_klarnakp_ReservationNumber'] ?? null;
     }
 
+    /**
+     * @return bool
+     */
     public function isKlarnaResponse(): bool
     {
         return $this->data['brq_primary_service'] === 'KlarnaKp';
     }
 
+    /**
+     * @return string|null
+     */
     public function getKlarnaTransactionReference(): ?string
     {
         return $this->data['brq_datarequest'] ?? null;
