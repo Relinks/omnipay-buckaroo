@@ -113,9 +113,9 @@ class NotificationResponse implements NotificationInterface
     /**
      * @return bool
      */
-    public function isKlarnaResponse(): bool
-    {
-        return $this->data['brq_primary_service'] === 'KlarnaKp';
+    public function isKlarnaResponse(): bool {
+        $type = $this->data['brq_primary_service'] ?? $this->data['ServiceCode'];
+        return $type === 'KlarnaKp';
     }
 
     /**
