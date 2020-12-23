@@ -174,7 +174,7 @@ class PurchaseRequest extends AbstractRequest
 
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
-        if($this->isPayPerMail()) {
+        if ($this->isPayPerMail()) {
             $services = $this->getPayperMailServices();
         } else {
             $services = $this->getServices($this->getPaymentMethod());

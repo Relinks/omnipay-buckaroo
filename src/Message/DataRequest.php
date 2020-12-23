@@ -172,7 +172,7 @@ class DataRequest extends AbstractRequest
                     ],
                 ],
             ];
-        } elseif ($this->getPaymentMethod() =='klarnakp') {
+        } elseif ($this->getPaymentMethod() == 'klarnakp') {
             $customerData = $this->getCustomerData();
             $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
             $data['Services'] = [
