@@ -62,6 +62,46 @@ class DataRequest extends AbstractRequest
     }
 
     /**
+     * @return bool
+     */
+    public function getUpdateReservation(): bool
+    {
+        return (bool)$this->getParameter('updateReservation');
+    }
+
+    /**
+     * @param bool $updateReservation
+     *
+     * @return $this
+     */
+    public function setUpdateReservation(bool $updateReservation): DataRequest
+    {
+        $this->setParameter('updateReservation', $updateReservation);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReservationNumber(): string
+    {
+        return $this->getParameter('reservationNumber');
+    }
+
+    /**
+     * @param string $reservatioNNumber
+     *
+     * @return $this
+     */
+    public function setReservationNumber(string $reservatioNNumber): DataRequest
+    {
+        $this->setParameter('reservationNumber', $reservatioNNumber);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -69,6 +109,8 @@ class DataRequest extends AbstractRequest
     public function getData(): array
     {
         $data = parent::getData();
+
+        $bla = $this->getUpdateReservation();
 
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
@@ -91,6 +133,7 @@ class DataRequest extends AbstractRequest
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
         $data['redirectCallable'] = $this->getRedirectCallable();
+        $data['updateReservation'] = $this->getUpdateReservation();
 
         return $data;
     }
@@ -179,7 +222,7 @@ class DataRequest extends AbstractRequest
                 'ServiceList' => [
                     [
                         'Name' => $this->getPaymentMethod(),
-                        'Action' => 'Reserve',
+                        'Action' => $this->getUpdateReservation() ? 'UpdateReservation' : 'Reserve',
                         'Parameters' => [
                             [
                                 'Name' => 'BillingFirstName',
@@ -271,7 +314,7 @@ class DataRequest extends AbstractRequest
                             ],
                             [
                                 'Name' => 'Pno',
-                                'Value' => $customerData['dateOfBirth']->format('dmY'),
+                                'Value' => $customerData['dateOfBirth'] ? $customerData['dateOfBirth']->format('dmY') : "",
                             ],
                             [
                                 'Name' => 'ShippingSameAsBilling',
@@ -281,6 +324,17 @@ class DataRequest extends AbstractRequest
                     ],
                 ],
             ];
+
+            if ($this->getUpdateReservation()) {
+                $reservationNumber = [
+                    [
+                        'Name' => 'ReservationNumber',
+                        'Value' => $this->getReservationNumber(),
+                    ],
+                ];
+                $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $reservationNumber);
+            }
+
             foreach ($this->getOrderLines() as $id => $orderLine) {
                 $orderLineData = [
                     [
