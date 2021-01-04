@@ -86,7 +86,7 @@ class DataRequest extends AbstractRequest
      */
     public function getReservationNumber(): string
     {
-        return $this->getParameter('reservationNumber');
+        return $this->getParameter('reservationNumber') ?? '';
     }
 
     /**
@@ -94,7 +94,7 @@ class DataRequest extends AbstractRequest
      *
      * @return $this
      */
-    public function setReservationNumber(string $reservatioNNumber): DataRequest
+    public function setReservationNumber(?string $reservatioNNumber): DataRequest
     {
         $this->setParameter('reservationNumber', $reservatioNNumber);
 
@@ -110,12 +110,8 @@ class DataRequest extends AbstractRequest
     {
         $data = parent::getData();
 
-        $bla = $this->getUpdateReservation();
-
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
-
         $services = $this->getServices();
-
         $data = array_merge($data, $services);
 
         $data['ClientIP'] = [
