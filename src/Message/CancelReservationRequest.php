@@ -8,7 +8,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\RuntimeException;
 
 /**
- * Currently only used for klarnakp (nieuwe klarna paymethod)
+ * Currently only used for klarnakp
  *
  * Class CancelReservationRequest
  * @package Omnipay\Buckaroo\Message
@@ -141,4 +141,3 @@ class CancelReservationRequest extends AbstractRequest
         return $this->setParameter('PushURL', $pushURL);
     }
 }
-
