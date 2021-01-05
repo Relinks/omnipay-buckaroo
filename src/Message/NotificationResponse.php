@@ -115,8 +115,12 @@ class NotificationResponse implements NotificationInterface
      */
     public function isKlarnaResponse(): bool {
         $paymenttype = $this->data['brq_primary_service'] ?? $this->data['brq_transaction_method'];
+        return $paymenttype === 'KlarnaKp';
+    }
+
+    public function isKlarnaPayTransaction(): bool {
         $transactiontype = $this->data['brq_transaction_type'] ?? '';
-        return $paymenttype === 'KlarnaKp' && $transactiontype === 'V610';
+        return $transactiontype === 'V610';
     }
 
     /**
