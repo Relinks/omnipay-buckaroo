@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Omnipay\Buckaroo\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
@@ -115,7 +117,8 @@ class CancelReservationRequest extends AbstractRequest
 
         return [
             'ServiceList' => [
-                ['Name' => $this->getPaymentMethod(),
+                [
+                    'Name' => $this->getPaymentMethod(),
                     'Action' => 'CancelReservation',
                     'Parameters' => [
                         [
