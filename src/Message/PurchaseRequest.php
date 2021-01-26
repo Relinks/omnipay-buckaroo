@@ -144,6 +144,26 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * @return string|null
+     */
+    public function getReservationNumber(): ?string
+    {
+        return $this->getParameter('reservationNumber');
+    }
+
+    /**
+     * @param string|null $reservationNumber
+     *
+     * @return $this
+     */
+    public function setReservationNumber(?string $reservationNumber): PurchaseRequest
+    {
+        $this->setParameter('reservationNumber', $reservationNumber);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -154,11 +174,9 @@ class PurchaseRequest extends AbstractRequest
 
         $this->validate('paymentMethod', 'amount', 'returnUrl', 'clientIp');
 
-        if($this->isPayPerMail())
-        {
+        if ($this->isPayPerMail()) {
             $services = $this->getPayperMailServices();
-        }
-        else {
+        } else {
             $services = $this->getServices($this->getPaymentMethod());
         }
 
@@ -544,6 +562,21 @@ class PurchaseRequest extends AbstractRequest
                     ];
                     $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
                 }
+                break;
+            case 'klarnakp':
+                $data['Services'] = [
+                    'ServiceList' => [
+                        ['Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                            'Parameters' => [
+                                [
+                                    'Name' => 'ReservationNumber',
+                                    'Value' => $this->getReservationNumber(),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
                 break;
         }
 

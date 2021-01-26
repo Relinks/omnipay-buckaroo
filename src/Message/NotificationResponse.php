@@ -29,11 +29,11 @@ class NotificationResponse implements NotificationInterface
     /**
      * Gateway Reference
      *
-     * @return string A reference provided by the gateway to represent this transaction
+     * @return string|null A reference provided by the gateway to represent this transaction
      */
-    public function getTransactionReference()
+    public function getTransactionReference(): ?string
     {
-        return $this->data['brq_transactions'];
+        return $this->data['brq_transactions'] ?? null;
     }
 
     /**
@@ -73,9 +73,9 @@ class NotificationResponse implements NotificationInterface
     /**
      * @return string
      */
-    public function getAmount()
+    public function getAmount(): ?string
     {
-        return $this->data['brq_amount'];
+        return $this->data['brq_amount'] ?? null;
     }
 
     /**
@@ -95,10 +95,39 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
-     * return string
+     * @return string|null
      */
-    public function getTransactionType()
+    public function getTransactionType(): ?string
     {
-        return $this->data['brq_transaction_type'];
+        return $this->data['brq_transaction_type'] ?? null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKlarnaReservationNumber(): ?string
+    {
+        return $this->data['brq_SERVICE_klarnakp_ReservationNumber'] ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isKlarnaResponse(): bool {
+        $paymenttype = $this->data['brq_primary_service'] ?? $this->data['brq_transaction_method'];
+        return $paymenttype === 'KlarnaKp';
+    }
+
+    public function isKlarnaPayTransaction(): bool {
+        $transactiontype = $this->data['brq_transaction_type'] ?? '';
+        return $transactiontype === 'V610';
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKlarnaTransactionReference(): ?string
+    {
+        return $this->data['brq_datarequest'] ?? null;
     }
 }

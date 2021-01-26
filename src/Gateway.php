@@ -7,6 +7,7 @@ use Omnipay\Buckaroo\Message\DataRequest;
 use Omnipay\Buckaroo\Message\PurchaseRequest;
 use Omnipay\Buckaroo\Message\StatusRequest;
 use Omnipay\Buckaroo\Message\TransactionRequest;
+use Omnipay\Buckaroo\Message\CancelReservationRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
@@ -82,5 +83,10 @@ class Gateway extends AbstractGateway
     public function transaction(array $parameters = [])
     {
         return $this->createRequest(TransactionRequest::class, $parameters);
+    }
+
+    public function cancelReservation(array $parameters = [])
+    {
+        return $this->createRequest(CancelReservationRequest::class, $parameters);
     }
 }
