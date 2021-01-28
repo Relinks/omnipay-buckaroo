@@ -128,6 +128,7 @@ class DataRequest extends AbstractRequest
         $data['ReturnURLError'] = $this->getCancelUrl();
         $data['ReturnURLReject'] = $this->getRejectUrl();
         $data['PushUrl'] = $this->getNotifyUrl();
+        $data['PushURLFailure'] = $this->getNotifyUrl();
         $data['redirectCallable'] = $this->getRedirectCallable();
         $data['updateReservation'] = $this->getUpdateReservation();
 
