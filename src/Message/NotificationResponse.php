@@ -55,6 +55,14 @@ class NotificationResponse implements NotificationInterface
     /**
      * @return bool
      */
+    public function isCanceled(): bool
+    {
+        return $this->data['brq_statuscode'] == 490;
+    }
+
+    /**
+     * @return bool
+     */
     public function isRejected(): bool
     {
         return $this->data['brq_statuscode'] == 690;
