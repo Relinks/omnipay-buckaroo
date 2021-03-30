@@ -122,7 +122,7 @@ class NotificationResponse implements NotificationInterface
      * @return bool
      */
     public function isKlarnaResponse(): bool {
-        $paymenttype = $this->data['brq_primary_service'] ?? $this->data['brq_transaction_method'];
+        $paymenttype = $this->data['brq_primary_service'] ?? $this->data['brq_transaction_method'] ?? null;
         return $paymenttype === 'KlarnaKp';
     }
 
