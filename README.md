@@ -13,7 +13,7 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "relinks/omnipay-buckaroo": "~2.0"
+        "relinks/omnipay-buckaroo": "^1.0"
     }
 }
 ```
