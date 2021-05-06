@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+
+## [1.1.0] - 2021-05-06
+
+### Changed
 - Require a specific hash from omnipay/common for php 8 support
 
 
