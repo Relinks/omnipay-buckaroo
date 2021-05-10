@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2021-05-10
+
+### Changed
+- Corrected usage of filter_var
+
 ## [1.1.0] - 2021-05-06
 
 ### Changed
