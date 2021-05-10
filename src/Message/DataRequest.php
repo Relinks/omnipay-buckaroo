@@ -117,7 +117,7 @@ class DataRequest extends AbstractRequest
         $data['ClientIP'] = [
             // 0 = IPV4
             // 1 = IPV6
-            'Type' => (int)filter_var($this->getClientIp(), FILTER_FLAG_IPV6),
+            'Type' => (int)filter_var($this->getClientIp(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6),
             'Address' => $this->getClientIp(),
         ];
         $data['Currency'] = $this->getCurrency();
