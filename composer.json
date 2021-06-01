@@ -17,11 +17,8 @@
     }
   },
   "require": {
-    "php": "^7.2 || ^8.0",
-    "omnipay/common": "dev-master#e1ebc22615f14219d31cefdf62d7036feb228b1c",
+    "php": "^8.0",
+    "omnipay/common": "^3.1",
     "ext-json": "*"
-  },
-  "require-dev": {
-    "omnipay/tests": "^3.0"
   }
 }
