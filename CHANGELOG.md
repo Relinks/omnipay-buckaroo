@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-06-01
+
+### Changed
+- Require the latest omnipay/common release
+- Removed the dev dependency of omnipay/tests
+
 ## [1.1.1] - 2021-05-10
 
 ### Changed
