@@ -18,7 +18,13 @@
   },
   "require": {
     "php": "^8.0",
-    "omnipay/common": "^3.1",
+    "omnipay/common": "dev-omnipay-php8",
     "ext-json": "*"
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:Relinks/omnipay-common.git"
+    }
+  ]
 }

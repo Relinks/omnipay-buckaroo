@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.2.1] - 2021-06-02
+
+### Changed
+- Use forked version of omnipay-common
+
 ## [1.2.0] - 2021-06-01
 
 ### Changed
