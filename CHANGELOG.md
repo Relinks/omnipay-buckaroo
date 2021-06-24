@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2021-06-24
+
+### Changed
+- Require the original repository again
+- Add dev dependency so composer is installable
+
 ## [1.2.1] - 2021-06-02
 
 ### Changed

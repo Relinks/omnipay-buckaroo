@@ -18,13 +18,10 @@
   },
   "require": {
     "php": "^8.0",
-    "omnipay/common": "dev-omnipay-php8",
+    "omnipay/common": "^3.1.2",
     "ext-json": "*"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:Relinks/omnipay-common.git"
-    }
-  ]
+  "require-dev": {
+    "php-http/guzzle7-adapter": "^1"
+  }
 }
