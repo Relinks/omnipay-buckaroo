@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2022-01-11
+
+### Changed
+- Added additional fields for klarna for localization
+
 ## [1.3.0] - 2021-06-24
 
 ### Changed
