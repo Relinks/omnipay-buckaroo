@@ -188,7 +188,7 @@ class DataRequest extends AbstractRequest
         $headers = [
             'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData, $endpoint),
             'Content-Type' => 'application/json',
-            'Culture' => 'nl-NL',
+            'Culture' => $this->getLocale(),
         ];
 
         try {
