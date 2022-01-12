@@ -86,7 +86,7 @@ class DataRequest extends AbstractRequest
      */
     public function getLocale(): string
     {
-        return $this->getParameter('locale') ?? 'nl-nl';
+        return $this->getParameter('locale') ?? 'nl-NL';
     }
 
     /**
