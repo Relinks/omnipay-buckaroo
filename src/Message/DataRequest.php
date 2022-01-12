@@ -62,6 +62,46 @@ class DataRequest extends AbstractRequest
     }
 
     /**
+     * @return string
+     */
+    public function getOperatingCountry(): string
+    {
+        return $this->getParameter('operatingCountry') ?? 'NL';
+    }
+
+    /**
+     * @param string $operatingCountry
+     *
+     * @return DataRequest
+     */
+    public function setOperatingCountry(string $operatingCountry): DataRequest
+    {
+        $this->setParameter('operatingCountry', $operatingCountry);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale(): string
+    {
+        return $this->getParameter('locale') ?? 'nl-NL';
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return DataRequest
+     */
+    public function setLocale(string $locale): DataRequest
+    {
+        $this->setParameter('locale', $locale);
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function getUpdateReservation(): bool
@@ -145,14 +185,17 @@ class DataRequest extends AbstractRequest
 
         $endpoint = $this->getEndpoint('/DataRequest');
 
+        $headers = [
+            'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData, $endpoint),
+            'Content-Type' => 'application/json',
+            'Culture' => $this->getLocale(),
+        ];
+
         try {
             $response = $this->httpClient->request(
                 'POST',
                 $endpoint,
-                [
-                    'Authorization' => 'hmac ' . $this->generateAuthorizationToken($jsonData, $endpoint),
-                    'Content-Type' => 'application/json',
-                ],
+                $headers,
                 $jsonData
             );
 
@@ -307,7 +350,7 @@ class DataRequest extends AbstractRequest
                             ],
                             [
                                 'Name' => 'OperatingCountry',
-                                'Value' => 'NL',
+                                'Value' => $this->getOperatingCountry(),
                             ],
                             [
                                 'Name' => 'Pno',
