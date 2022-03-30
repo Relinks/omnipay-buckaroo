@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2022-03-30
+
+### Changed
+- Added initial support for giropay and sofort
+
 ## [1.4.0] - 2022-01-11
 
 ### Changed
