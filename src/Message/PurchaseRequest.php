@@ -566,7 +566,8 @@ class PurchaseRequest extends AbstractRequest
             case 'klarnakp':
                 $data['Services'] = [
                     'ServiceList' => [
-                        ['Name' => $this->getPaymentMethod(),
+                        [
+                            'Name' => $this->getPaymentMethod(),
                             'Action' => 'Pay',
                             'Parameters' => [
                                 [
@@ -574,6 +575,25 @@ class PurchaseRequest extends AbstractRequest
                                     'Value' => $this->getReservationNumber(),
                                 ],
                             ],
+                        ],
+                    ],
+                ];
+                break;
+            case 'giropay':
+                $data['Services'] = [
+                    'ServiceList' => [
+                        'Name' => $this->getPaymentMethod(),
+                        'Action' => 'Pay',
+                        'Parameters' => [],
+                    ],
+                ];
+                break;
+            case 'Sofortueberweisung':
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => 'Sofortueberweisung',
+                            'Action' => 'Pay',
                         ],
                     ],
                 ];
