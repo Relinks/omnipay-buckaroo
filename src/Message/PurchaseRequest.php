@@ -582,9 +582,11 @@ class PurchaseRequest extends AbstractRequest
             case 'giropay':
                 $data['Services'] = [
                     'ServiceList' => [
-                        'Name' => $this->getPaymentMethod(),
-                        'Action' => 'Pay',
-                        'Parameters' => [],
+                        [
+                            'Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                            'Parameters' => [],
+                        ],
                     ],
                 ];
                 break;
