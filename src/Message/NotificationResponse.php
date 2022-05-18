@@ -53,6 +53,24 @@ class NotificationResponse implements NotificationInterface
     }
 
     /**
+     * Was a non-completed transaction given a status that can still be processed later (delayed).
+     * Ie; pending manual review or: e-check that was not yet cleared.
+     *
+     * @return bool
+     */
+    public function isTransactionCompletionDelayed(): bool
+    {
+        if (
+            isset($this->data['brq_statuscode_detail'])
+            && ($this->data['brq_statuscode_detail'] == 'P917' || $this->data['brq_statuscode_detail'] == 'P918')
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function isCanceled(): bool
