@@ -267,10 +267,7 @@ class DataRequest extends AbstractRequest
                 ]
             ];
 
-            // Excluding Customer Data from the updateReservation call.
-            if (!$this->getUpdateReservation()) {
-                $data = $this->addCustomerDataToParameters($data, $customerData);
-            }
+
 
             if ($this->getUpdateReservation()) {
                 $reservationNumber = [
@@ -280,6 +277,9 @@ class DataRequest extends AbstractRequest
                     ],
                 ];
                 $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $reservationNumber);
+            } else {
+                // Only include customer data with reserve requests.
+                $data = $this->addCustomerDataToParameters($data, $customerData);
             }
 
             foreach ($this->getOrderLines() as $id => $orderLine) {
