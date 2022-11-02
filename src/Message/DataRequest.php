@@ -257,113 +257,20 @@ class DataRequest extends AbstractRequest
             ];
         } elseif ($this->getPaymentMethod() == 'klarnakp') {
             $customerData = $this->getCustomerData();
-            $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
             $data['Services'] = [
                 'ServiceList' => [
                     [
                         'Name' => $this->getPaymentMethod(),
                         'Action' => $this->getUpdateReservation() ? 'UpdateReservation' : 'Reserve',
-                        'Parameters' => [
-                            [
-                                'Name' => 'BillingFirstName',
-                                'Value' => $customerData['firstName'],
-                            ],
-                            [
-                                'Name' => 'BillingLastName',
-                                'Value' => $customerData['lastName'],
-                            ],
-                            [
-                                'Name' => 'BillingStreet',
-                                'Value' => $customerData['billingAddress']['street'],
-                            ],
-                            [
-                                'Name' => 'BillingHouseNumber',
-                                'Value' => $customerData['billingAddress']['houseNumber'],
-                            ],
-                            [
-                                'Name' => 'BillingHouseNumberSuffix',
-                                'Value' => $customerData['billingAddress']['houseNumberExtension'],
-                            ],
-                            [
-                                'Name' => 'BillingPostalCode',
-                                'Value' => $customerData['billingAddress']['postalCode'],
-                            ],
-                            [
-                                'Name' => 'BillingCity',
-                                'Value' => $customerData['billingAddress']['city'],
-                            ],
-                            [
-                                'Name' => 'BillingCountry',
-                                'Value' => $customerData['billingAddress']['country'],
-                            ],
-                            [
-                                'Name' => 'BillingCellPhoneNumber',
-                                'Value' => $customerData['billingAddress']['phoneNumber'],
-                            ],
-                            [
-                                'Name' => 'BillingEmail',
-                                'Value' => $customerData['billingAddress']['email'],
-                            ],
-                            [
-                                'Name' => 'ShippingFirstName',
-                                'Value' => $customerData['firstName'],
-                            ],
-                            [
-                                'Name' => 'ShippingLastName',
-                                'Value' => $customerData['lastName'],
-                            ],
-                            [
-                                'Name' => 'ShippingStreet',
-                                'Value' => $customerData['shippingAddress']['street'],
-                            ],
-                            [
-                                'Name' => 'ShippingHouseNumber',
-                                'Value' => $customerData['shippingAddress']['houseNumber'],
-                            ],
-                            [
-                                'Name' => 'ShippingHouseNumberSuffix',
-                                'Value' => $customerData['shippingAddress']['houseNumberExtension'],
-                            ],
-                            [
-                                'Name' => 'ShippingPostalCode',
-                                'Value' => $customerData['shippingAddress']['postalCode'],
-                            ],
-                            [
-                                'Name' => 'ShippingCity',
-                                'Value' => $customerData['shippingAddress']['city'],
-                            ],
-                            [
-                                'Name' => 'ShippingCountry',
-                                'Value' => $customerData['shippingAddress']['country'],
-                            ],
-                            [
-                                'Name' => 'ShippingPhoneNumber',
-                                'Value' => $customerData['shippingAddress']['houseNumber'],
-                            ],
-                            [
-                                'Name' => 'ShippingEmail',
-                                'Value' => $customerData['shippingAddress']['email'],
-                            ],
-                            [
-                                'Name' => 'Gender',
-                                'Value' => (string)$customerData['gender'],
-                            ],
-                            [
-                                'Name' => 'OperatingCountry',
-                                'Value' => $this->getOperatingCountry(),
-                            ],
-                            [
-                                'Name' => 'Pno',
-                                'Value' => $customerData['dateOfBirth'] ? $customerData['dateOfBirth']->format('dmY') : "",
-                            ],
-                            [
-                                'Name' => 'ShippingSameAsBilling',
-                                'Value' => $shippingSameAsBilling ? 'true' : 'false',
-                            ],
-                        ],
-                    ],
-                ],
+                        'Parameters' => []
+                    ]
+                ]
             ];
+
+            // Excluding Customer Data from the updateReservation call.
+            if (!$this->getUpdateReservation()) {
+                $data = $this->addCustomerDataToParameters($data, $customerData);
+            }
 
             if ($this->getUpdateReservation()) {
                 $reservationNumber = [
@@ -417,6 +324,117 @@ class DataRequest extends AbstractRequest
                 $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
             }
         }
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param array $customerData
+     *
+     * @return array
+     */
+    private function addCustomerDataToParameters(array $data, array $customerData): array
+    {
+        $shippingSameAsBilling = $customerData['billingAddress'] == $customerData['shippingAddress'];
+
+        $data['Services']['ServiceList'][0]['Parameters'] = [
+            [
+                'Name' => 'BillingFirstName',
+                'Value' => $customerData['firstName'],
+            ],
+            [
+                'Name' => 'BillingLastName',
+                'Value' => $customerData['lastName'],
+            ],
+            [
+                'Name' => 'BillingStreet',
+                'Value' => $customerData['billingAddress']['street'],
+            ],
+            [
+                'Name' => 'BillingHouseNumber',
+                'Value' => $customerData['billingAddress']['houseNumber'],
+            ],
+            [
+                'Name' => 'BillingHouseNumberSuffix',
+                'Value' => $customerData['billingAddress']['houseNumberExtension'],
+            ],
+            [
+                'Name' => 'BillingPostalCode',
+                'Value' => $customerData['billingAddress']['postalCode'],
+            ],
+            [
+                'Name' => 'BillingCity',
+                'Value' => $customerData['billingAddress']['city'],
+            ],
+            [
+                'Name' => 'BillingCountry',
+                'Value' => $customerData['billingAddress']['country'],
+            ],
+            [
+                'Name' => 'BillingCellPhoneNumber',
+                'Value' => $customerData['billingAddress']['phoneNumber'],
+            ],
+            [
+                'Name' => 'BillingEmail',
+                'Value' => $customerData['billingAddress']['email'],
+            ],
+            [
+                'Name' => 'ShippingFirstName',
+                'Value' => $customerData['firstName'],
+            ],
+            [
+                'Name' => 'ShippingLastName',
+                'Value' => $customerData['lastName'],
+            ],
+            [
+                'Name' => 'ShippingStreet',
+                'Value' => $customerData['shippingAddress']['street'],
+            ],
+            [
+                'Name' => 'ShippingHouseNumber',
+                'Value' => $customerData['shippingAddress']['houseNumber'],
+            ],
+            [
+                'Name' => 'ShippingHouseNumberSuffix',
+                'Value' => $customerData['shippingAddress']['houseNumberExtension'],
+            ],
+            [
+                'Name' => 'ShippingPostalCode',
+                'Value' => $customerData['shippingAddress']['postalCode'],
+            ],
+            [
+                'Name' => 'ShippingCity',
+                'Value' => $customerData['shippingAddress']['city'],
+            ],
+            [
+                'Name' => 'ShippingCountry',
+                'Value' => $customerData['shippingAddress']['country'],
+            ],
+            [
+                'Name' => 'ShippingPhoneNumber',
+                'Value' => $customerData['shippingAddress']['houseNumber'],
+            ],
+            [
+                'Name' => 'ShippingEmail',
+                'Value' => $customerData['shippingAddress']['email'],
+            ],
+            [
+                'Name' => 'Gender',
+                'Value' => (string)$customerData['gender'],
+            ],
+            [
+                'Name' => 'OperatingCountry',
+                'Value' => $this->getOperatingCountry(),
+            ],
+            [
+                'Name' => 'Pno',
+                'Value' => $customerData['dateOfBirth'] ? $customerData['dateOfBirth']->format('dmY') : "",
+            ],
+            [
+                'Name' => 'ShippingSameAsBilling',
+                'Value' => $shippingSameAsBilling ? 'true' : 'false',
+            ],
+        ];
         return $data;
     }
 }
