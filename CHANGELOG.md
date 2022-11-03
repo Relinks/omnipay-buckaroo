@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.5.1] - 2022-11-03
+
+### Changed
+- Fixed Klarna updateReservation call by excluding customer data.
+
 ## [1.5.0] - 2022-03-30
 
 ### Changed
