@@ -1,9 +1,2 @@
-# This is a comment.
-# Each line is a file pattern followed by one or more owners.
-
-# These owners will be the default owners for everything in
-# the repo. Unless a later match takes precedence,
-# @Relinks/backend will be requested for review when someone opens a pull request.
-*       @Relinks/backend
-
-# The following files should be reviewed by DevOps
+# These owners will be the default owners for everything in the repo. Unless a later match takes precedence
+*       @Relinks/it-junior-backend-developer @Relinks/it-medior-backend-developer @Relinks/it-senior-backend-developer @Relinks/it-teamlead-backend
