@@ -600,28 +600,27 @@ class PurchaseRequest extends AbstractRequest
                     ],
                 ];
                 break;
-            case 'idealin3':
+            case 'in3':
                 $customerData = $this->getCustomerData();
                 $data['Services'] = [
                     'ServiceList' => [
                         [
                             'Name' => $this->getPaymentMethod(),
                             'Action' => 'Pay',
-                            'Parameters' => [
-//                                [// Optional
-//                                    "Name" => "InvoiceDate",
-//                                    "GroupType" => "",
-//                                    "GroupID" => "",
-//                                    "Value" => "2023-12-01"
-//                                ],
-//                                [// Optional
-//                                    "Name" => "InvoiceUrl",
-//                                    "GroupType" => "",
-//                                    "GroupID" => "",
-//                                    "Value" => "https://www.buckaroo.nl"
-//                                ],
-                            ],
+                            'Parameters' => [],
                         ],
+//                        [// Optional
+//                            "Name" => "InvoiceDate",
+//                            "GroupType" => "",
+//                            "GroupID" => "",
+//                            "Value" => "2023-12-01"
+//                        ],
+//                        [// Optional
+//                            "Name" => "InvoiceUrl",
+//                            "GroupType" => "",
+//                            "GroupID" => "",
+//                            "Value" => "https://www.buckaroo.nl"
+//                        ],
                     ],
                 ];
                 foreach ($this->getOrderLines() as $id => $orderLine) {
