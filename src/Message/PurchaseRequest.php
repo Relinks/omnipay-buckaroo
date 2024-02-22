@@ -608,245 +608,137 @@ class PurchaseRequest extends AbstractRequest
                             'Name' => $this->getPaymentMethod(),
                             'Action' => 'Pay',
                             'Parameters' => [],
-                        ],
-//                        [// Optional
-//                            "Name" => "InvoiceDate",
-//                            "GroupType" => "",
-//                            "GroupID" => "",
-//                            "Value" => "2023-12-01"
-//                        ],
-//                        [// Optional
-//                            "Name" => "InvoiceUrl",
-//                            "GroupType" => "",
-//                            "GroupID" => "",
-//                            "Value" => "https://www.buckaroo.nl"
-//                        ],
+                        ]
                     ],
                 ];
                 foreach ($this->getOrderLines() as $id => $orderLine) {
                     $orderLineData = [
-                        [// Optional
+                        [
                             "Name" => "Identifier",
                             'GroupType' => 'Article',
                             'GroupId' => (string) $id,
                             'Value' => $orderLine['ArticleNumber'],
                         ],
-//                        [// Optional
-//                            "Name" => "Type",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Physical"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Description",
                             "GroupType" => "Article",
                             "GroupID" => (string) $id,
                             "Value" => mb_substr($orderLine['ArticleDescription'], 0, 100),
                         ],
-//                        [// Optional
-//                            "Name" => "Category",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Toy Car"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Quantity",
                             "GroupType" => "Article",
                             "GroupID" => (string) $id,
                             "Value" => $orderLine['Quantity']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "GrossUnitPrice",
                             "GroupType" => "Article",
                             "GroupID" => (string) $id,
                             "Value" => $orderLine['ArticlePrice']
                         ],
-//                        [// Optional
-//                            "Name" => "QuantityDescription",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Pieces"
-//                        ],
-//                        [// Optional
-//                            "Name" => "VatPercentage",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "21"
-//                        ],
-//                        [// Optional
-//                            "Name" => "VatAmount",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "0.01"
-//                        ],
-//                        [// Optional
-//                            "Name" => "DeliveryDate",
-//                            "GroupType" => "Article",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "2023-11-11"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "CustomerNumber",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['id']
                         ],
-//                        [// Optional
-//                            "Name" => "FirstName",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "John"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "LastName",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['lastName'],
                         ],
-//                        [// Optional
-//                            "Name" => "Initials",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "JD"
-//                        ],
-//                        [// Optional
-//                            "Name" => "BirthDate",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "1990-01-01"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Phone",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['phoneNumber']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "Email",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['email']
                         ],
-//                        [// Optional
-//                            "Name" => "Fax",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "0301234567"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Category",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['type']
                         ],
-//                        [// Optional
-//                            "Name" => "CareOf",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "John Doe"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Street",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['street']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "StreetNumber",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['houseNumber']
                         ],
-                        [// Optional
+                        [
                             "Name" => "StreetNumberSuffix",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['houseNumberExtension']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "PostalCode",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['postalCode']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "City",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['city']
                         ],
-//                        [// Optional
-//                            "Name" => "Region",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Utrecht"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "CountryCode",
                             "GroupType" => "BillingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['billingAddress']['country']
                         ],
-//                        [// Optional
-//                            "Name" => "CareOf",
-//                            "GroupType" => "ShippingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Jane Doe"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "Street",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['street']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "StreetNumber",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['houseNumber']
                         ],
-                        [// Optional
+                        [
                             "Name" => "StreetNumberSuffix",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['houseNumberExtension']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "City",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['city']
                         ],
-                        [// Mandatory
+                        [
                             "Name" => "PostalCode",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['postalCode']
                         ],
-//                        [// Optional
-//                            "Name" => "Region",
-//                            "GroupType" => "ShippingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "Utrecht"
-//                        ],
-                        [// Mandatory
+                        [
                             "Name" => "CountryCode",
                             "GroupType" => "ShippingCustomer",
                             "GroupID" => (string) $id,
                             "Value" => $customerData['shippingAddress']['country']
-                        ],
-//                        [// Optional
-//                            "Name" => "CompanyName",
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "none"
-//                        ],
-//                        [// Optional
-//                            "Name" => "CocNumber", // Chain of Custody
-//                            "GroupType" => "BillingCustomer",
-//                            "GroupID" => (string) $id,
-//                            "Value" => "none"
-//                        ]
+                        ]
                     ];
                     $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
                 }
