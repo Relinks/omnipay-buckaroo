@@ -600,6 +600,149 @@ class PurchaseRequest extends AbstractRequest
                     ],
                 ];
                 break;
+            case 'in3':
+                $customerData = $this->getCustomerData();
+                $data['Services'] = [
+                    'ServiceList' => [
+                        [
+                            'Name' => $this->getPaymentMethod(),
+                            'Action' => 'Pay',
+                            'Parameters' => [],
+                        ]
+                    ],
+                ];
+                foreach ($this->getOrderLines() as $id => $orderLine) {
+                    $orderLineData = [
+                        [
+                            "Name" => "Identifier",
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['ArticleNumber'],
+                        ],
+                        [
+                            "Name" => "Description",
+                            "GroupType" => "Article",
+                            "GroupID" => (string) $id,
+                            "Value" => mb_substr($orderLine['ArticleDescription'], 0, 100),
+                        ],
+                        [
+                            "Name" => "Quantity",
+                            "GroupType" => "Article",
+                            "GroupID" => (string) $id,
+                            "Value" => $orderLine['Quantity']
+                        ],
+                        [
+                            "Name" => "GrossUnitPrice",
+                            "GroupType" => "Article",
+                            "GroupID" => (string) $id,
+                            "Value" => $orderLine['ArticlePrice']
+                        ],
+                        [
+                            "Name" => "CustomerNumber",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['id']
+                        ],
+                        [
+                            "Name" => "LastName",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['lastName'],
+                        ],
+                        [
+                            "Name" => "Phone",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['phoneNumber']
+                        ],
+                        [
+                            "Name" => "Email",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['email']
+                        ],
+                        [
+                            "Name" => "Category",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['type']
+                        ],
+                        [
+                            "Name" => "Street",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['street']
+                        ],
+                        [
+                            "Name" => "StreetNumber",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['houseNumber']
+                        ],
+                        [
+                            "Name" => "StreetNumberSuffix",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['houseNumberExtension']
+                        ],
+                        [
+                            "Name" => "PostalCode",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['postalCode']
+                        ],
+                        [
+                            "Name" => "City",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['city']
+                        ],
+                        [
+                            "Name" => "CountryCode",
+                            "GroupType" => "BillingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['billingAddress']['country']
+                        ],
+                        [
+                            "Name" => "Street",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['street']
+                        ],
+                        [
+                            "Name" => "StreetNumber",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['houseNumber']
+                        ],
+                        [
+                            "Name" => "StreetNumberSuffix",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['houseNumberExtension']
+                        ],
+                        [
+                            "Name" => "City",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['city']
+                        ],
+                        [
+                            "Name" => "PostalCode",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['postalCode']
+                        ],
+                        [
+                            "Name" => "CountryCode",
+                            "GroupType" => "ShippingCustomer",
+                            "GroupID" => (string) $id,
+                            "Value" => $customerData['shippingAddress']['country']
+                        ]
+                    ];
+                    $data['Services']['ServiceList'][0]['Parameters'] = array_merge($data['Services']['ServiceList'][0]['Parameters'], $orderLineData);
+                }
+                break;
         }
 
         return $data;
