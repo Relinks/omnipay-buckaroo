@@ -620,6 +620,12 @@ class PurchaseRequest extends AbstractRequest
                             'Value' => $orderLine['ArticleNumber'],
                         ],
                         [
+                            "Name" => "Type",
+                            'GroupType' => 'Article',
+                            'GroupId' => (string) $id,
+                            'Value' => $orderLine['Type'],
+                        ],
+                        [
                             "Name" => "Description",
                             "GroupType" => "Article",
                             "GroupID" => (string) $id,
