@@ -164,6 +164,26 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * @return string|null
+     */
+    public function getSessionId(): ?string
+    {
+        return $this->getParameter('sessionId');
+    }
+
+    /**
+     * @param string|null $sessionId
+     *
+     * @return $this
+     */
+    public function setSessionId(?string $sessionId): PurchaseRequest
+    {
+        $this->setParameter('sessionId', $sessionId);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws \Omnipay\Common\Exception\InvalidRequestException
@@ -328,21 +348,18 @@ class PurchaseRequest extends AbstractRequest
                 }
                 break;
             case 'creditcard':
-                if ($this->getIssuer() && $this->getEncryptedKey()) {
+                if ($this->getIssuer() && $this->getSessionId()) {
                     $data['Services'] = [
                         'ServiceList' => [
                             [
                                 'Name' => $this->getParameter('issuer'),
-                                'Action' => 'PayEncrypted',
-                                "Version" => 0,
+                                'Action' => 'PayWithToken',
                                 'Parameters' => [
                                     [
-                                        'Name' => 'EncryptedCardData',
-                                        "GroupType" => '',
-                                        "GroupID" => '',
-                                        'Value' => $this->getParameter('encryptedKey'),
-                                    ],
-                                ],
+                                        'Name' => 'SessionId',
+                                        'Value' => $this->getSessionId()
+                                    ]
+                                ]
                             ],
                         ],
                     ];
