@@ -17,3 +17,30 @@ jobs:
       contents: write
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  phpunit:
+    uses: Relinks/sawiday-github-actions/.github/workflows/workflow-php-phpunit.yaml@v2.16.0
+    if: github.run_attempt > 1 || (github.event_name == 'pull_request' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'auto-merge')))
+    permissions:
+      contents: read
+      checks: write
+    with:
+      files: |
+        src
+        classes
+        controller
+        templates
+        test
+        .env.dist
+        .env.ci
+        composer.json
+        composer.lock
+        phpunit.xml.dist
+        config
+        tests-bootstrap.php
+        jenkins-testenv.sql
+        bin/console
+        bin/console.php
+        cache/lazy_services
+        data/log
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
