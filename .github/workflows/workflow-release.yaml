@@ -1,0 +1,13 @@
+name: Run the pipeline release
+on:
+  schedule:
+    - cron: '0 7 * * 0'
+  workflow_dispatch: {}
+
+jobs:
+  semantic-release:
+    uses: Relinks/sawiday-github-actions/.github/workflows/workflow-semantic-release.yaml@v2.16.0
+    permissions:
+      contents: write
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
