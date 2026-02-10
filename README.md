@@ -27,3 +27,7 @@ And run composer to update your dependencies:
 
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
 repository.
+
+## Cloud dev usage
+
+To use the package with CloudDev simply require the branch "composer require relinks/omnipay-buckaroo:dev-BRANCH"
