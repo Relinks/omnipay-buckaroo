@@ -36,11 +36,12 @@ class StatusRequest extends AbstractRequest
                     'Content-Type' => 'application/json',
                 ]
             );
-            $respData = json_decode((string) $response->getBody(), true);
+            $rawBody = (string) $response->getBody();
+            $respData = json_decode($rawBody, true);
         } catch (Throwable $t) {
             throw new RuntimeException('Could not send the request', 0, $t);
         }
 
-        return new StatusResponse($this, $respData);
+        return new StatusResponse($this, $respData, $response->getStatusCode(), $rawBody);
     }
 }
