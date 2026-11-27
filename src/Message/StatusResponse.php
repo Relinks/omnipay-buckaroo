@@ -3,11 +3,38 @@ declare(strict_types=1);
 
 namespace Omnipay\Buckaroo\Message;
 
+use Omnipay\Common\Message\RequestInterface;
+
 /**
  * Buckaroo Purchase Response
  */
 class StatusResponse extends AbstractResponse
 {
+    private ?int $httpStatusCode;
+    private ?string $rawBody;
+
+    public function __construct(
+        RequestInterface $request,
+        $data,
+        ?int $httpStatusCode = null,
+        ?string $rawBody = null
+    ) {
+        parent::__construct($request, $data);
+        $this->httpStatusCode = $httpStatusCode;
+        $this->rawBody = $rawBody;
+    }
+
+    public function getHttpStatusCode(): ?int
+    {
+        return $this->httpStatusCode;
+    }
+
+    // Buckaroo rejects a request (e.g. a bad Authorization header) with a text/plain body, which getData() can't hold
+    public function getRawBody(): ?string
+    {
+        return $this->rawBody;
+    }
+
     /**
      *
      * get the servicecode of the response this is usually the paymentmethod
